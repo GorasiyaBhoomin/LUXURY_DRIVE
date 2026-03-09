@@ -1,0 +1,635 @@
+﻿:root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --card: #141414;
+    --border: #222;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --text: #EFEFEF;
+    --muted: #888;
+    --dim: #444;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+/* PAGE ENTER ANIMATION */
+.page-enter {
+    animation: pageIn 0.6s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.page-transition {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9999;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    pointer-events: none;
+}
+
+    .page-transition.leaving {
+        animation: curtainClose 0.5s cubic-bezier(0.77,0,0.18,1) forwards;
+    }
+
+@keyframes curtainClose {
+    from {
+        transform: scaleY(0);
+        transform-origin: bottom;
+    }
+
+    to {
+        transform: scaleY(1);
+        transform-origin: bottom;
+    }
+}
+
+/* NAV */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(20px);
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+}
+
+.brand {
+    font-family: 'Bebas Neue';
+    font-size: 1.5rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+}
+
+.sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: -2px;
+}
+
+.nav-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+    .nav-back:hover {
+        color: var(--gold);
+    }
+
+/* BREADCRUMB */
+.breadcrumb {
+    padding: 1.5rem 4rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    animation: fadeUp 0.5s ease 0.1s both;
+}
+
+    .breadcrumb a {
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+        .breadcrumb a:hover {
+            color: var(--gold);
+        }
+
+    .breadcrumb span {
+        color: var(--gold);
+    }
+
+/* MAIN LAYOUT */
+.car-detail-wrap {
+    padding: 2.5rem 4rem 6rem;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+/* LEFT: IMAGE SECTION */
+.car-gallery {
+    position: sticky;
+    top: 100px;
+}
+
+.main-img-wrap {
+    position: relative;
+    overflow: hidden;
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    animation: fadeLeft 0.7s ease 0.15s both;
+}
+
+@keyframes fadeLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.main-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.9);
+    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), filter 0.4s;
+}
+
+.main-img-wrap:hover .main-img {
+    transform: scale(1.04);
+    filter: brightness(1.05);
+}
+
+.main-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.car-type-ribbon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--gold);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 0.3rem 0.8rem;
+    text-transform: uppercase;
+}
+
+.thumb-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    animation: fadeUp 0.6s ease 0.35s both;
+}
+
+.thumb {
+    flex: 1;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    filter: brightness(0.65);
+    transition: border-color 0.2s, filter 0.2s;
+}
+
+    .thumb.active {
+        border-color: var(--gold);
+        filter: brightness(1);
+    }
+
+    .thumb:hover {
+        filter: brightness(0.9);
+    }
+
+/* QUICK STATS BAR */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    border: 1px solid var(--border);
+    margin-top: 1.2rem;
+    animation: fadeUp 0.6s ease 0.45s both;
+}
+
+.stat-item {
+    padding: 1rem 0.6rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+}
+
+    .stat-item:last-child {
+        border-right: none;
+    }
+
+.stat-icon {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.stat-val {
+    font-family: 'Bebas Neue';
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    display: block;
+}
+
+.stat-lbl {
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* RIGHT: DETAILS */
+.car-details-col {
+    animation: fadeRight 0.7s ease 0.2s both;
+}
+
+@keyframes fadeRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.car-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.car-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.car-subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+}
+
+/* PRICE BLOCK */
+.price-block {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.price-main {
+    font-family: 'Bebas Neue';
+    font-size: 3rem;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+}
+
+.price-period {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.price-note {
+    font-size: 0.7rem;
+    color: var(--dim);
+    margin-left: auto;
+}
+
+/* SPECS TABLE */
+.specs-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.specs-table {
+    margin-bottom: 2rem;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateX(15px);
+}
+
+    .spec-row.visible {
+        animation: specIn 0.4s ease forwards;
+    }
+
+@keyframes specIn {
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.spec-key {
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.spec-key-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+.spec-val {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* DESCRIPTION */
+.desc-block {
+    margin-bottom: 2rem;
+}
+
+.desc-text {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+/* FEATURES */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+}
+
+.feature-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.8rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    transition: border-color 0.2s, color 0.2s;
+}
+
+    .feature-tag:hover {
+        border-color: var(--gold);
+        color: var(--text);
+    }
+
+.feature-tag-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* CTA AREA */
+.cta-area {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.btn-gold-lg {
+    flex: 1;
+    padding: 1.1rem 2rem;
+    background: var(--gold);
+    color: #000;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+    .btn-gold-lg:hover {
+        background: var(--gold-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(201,168,76,0.35);
+    }
+
+.btn-outline-lg {
+    padding: 1.1rem 1.5rem;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Montserrat';
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-outline-lg:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+    }
+
+/* SIMILAR CARS */
+.similar-section {
+    padding: 0 4rem 5rem;
+}
+
+.similar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    margin-bottom: 0.4rem;
+}
+
+.similar-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+}
+
+.similar-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1.2rem;
+}
+
+.sim-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s, transform 0.3s;
+}
+
+    .sim-card:hover {
+        border-color: rgba(201,168,76,0.35);
+        transform: translateY(-4px);
+    }
+
+    .sim-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.8);
+        transition: filter 0.3s;
+    }
+
+    .sim-card:hover img {
+        filter: brightness(1);
+    }
+
+.sim-info {
+    padding: 1rem 1.1rem;
+}
+
+.sim-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.sim-price {
+    font-size: 0.78rem;
+    color: var(--gold);
+    font-weight: 700;
+    font-family: 'Bebas Neue';
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+}
+
+    .sim-price span {
+        font-family: 'Montserrat';
+        font-size: 0.68rem;
+        color: var(--muted);
+        font-weight: 400;
+    }
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@media(max - width:900px) {
+    .car-detail-wrap {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1.5rem 4rem;
+        gap: 2rem;
+    }
+
+    .car-gallery {
+        position: static;
+    }
+
+    .similar-section {
+        padding: 0 1.5rem 4rem;
+    }
+
+    .similar-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    nav {
+        padding: 1rem 1.5rem;
+    }
+
+    .breadcrumb {
+        padding: 1rem 1.5rem 0;
+    }
+}
+

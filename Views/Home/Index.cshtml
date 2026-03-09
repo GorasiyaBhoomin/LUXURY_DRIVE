@@ -1,0 +1,462 @@
+﻿@{
+    Layout = null;
+
+    ViewData["Title"] = "Home Page";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXE DRIVE – Premium Rentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-logo">
+            <div class="nav-logo-icon">🛡</div>
+            <div class="nav-logo-text">
+                <div class="brand">LUXE DRIVE</div>
+                <div class="sub">Premium Rentals</div>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="#hero">Home</a>
+            <a href="#cars">Cars</a>
+            <a href="#why">About</a>
+            <a href="#contact">Contact</a>
+            <a href="/Home/Profile" class="nav-avatar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-slides">
+            <div class="hero-slide hero-slide-1 active"></div>
+            <div class="hero-slide hero-slide-2"></div>
+            <div class="hero-slide hero-slide-3"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-eyebrow">Exclusive Fleet</div>
+            <h1 class="hero-title">Premium Car<br><em>Rentals</em></h1>
+            <p class="hero-sub">Experience luxury and comfort with our exclusive fleet</p>
+            <div class="hero-ctas">
+                <a href="#cars" class="btn-gold">Browse Cars</a>
+                <a href="#why" class="btn-outline">Learn More</a>
+            </div>
+        </div>
+
+        <div class="hero-dots">
+            <div class="hero-dot active" onclick="goSlide(0)"></div>
+            <div class="hero-dot" onclick="goSlide(1)"></div>
+            <div class="hero-dot" onclick="goSlide(2)"></div>
+        </div>
+
+        <div class="hero-scroll-hint">Scroll</div>
+    </section>
+
+    <!-- SEARCH -->
+    <section id="search-section">
+        <div class="search-label reveal">Find Your Perfect Car</div>
+        <div class="search-bar reveal">
+            <div class="search-input-wrap">
+                <span class="search-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                </span>
+                <input type="text" class="search-input" placeholder="Search by brand or model..." id="searchInput" oninput="filterCars()">
+            </div>
+            <select class="search-select" id="typeFilter" onchange="filterCars()">
+                <option value="">All Types</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Sports">Sports</option>
+                <option value="SUV">SUV</option>
+                <option value="Electric">Electric</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- CARS -->
+    <section id="cars">
+        <div class="section-header reveal">
+            <h2>Available Cars</h2>
+            <div class="divider"><span></span><i>◆</i><span></span></div>
+        </div>
+
+        <div class="cars-grid" id="carsGrid">
+
+            <div class="car-card" data-name="BMW M5" data-type="Luxury">
+                <div class="car-image-wrap">
+                    <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80" alt="BMW M5">
+                    <span class="car-badge badge-luxury">Luxury</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-name">BMW M5</div>
+                    <div class="car-specs">
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                            4 Seats
+                        </div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
+                            Automatic
+                        </div>
+                    </div>
+                    <div class="car-footer">
+                        <div class="car-price">₹10,000 <span>/day</span></div>
+                        <div class="car-actions">
+                            <a href="/Home/Car_view" class="btn-sm btn-sm-outline">View</a>
+                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card" data-name="Audi R8" data-type="Sports">
+                <div class="car-image-wrap">
+                    <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80" alt="Audi R8">
+                    <span class="car-badge" style="background:#7C3AED">Sports</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-name">Audi R8</div>
+                    <div class="car-specs">
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>2 Seats</div>
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                    </div>
+                    <div class="car-footer">
+                        <div class="car-price">₹20,000 <span>/day</span></div>
+                        <div class="car-actions">
+                            <a href="#" class="btn-sm btn-sm-outline">View</a>
+                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card" data-name="Range Rover Velar" data-type="SUV">
+                <div class="car-image-wrap">
+                    <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Range Rover Velar">
+                    <span class="car-badge" style="background:#047857">SUV</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-name">Range Rover Velar</div>
+                    <div class="car-specs">
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>5 Seats</div>
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                    </div>
+                    <div class="car-footer">
+                        <div class="car-price">₹15,000 <span>/day</span></div>
+                        <div class="car-actions">
+                            <a href="#" class="btn-sm btn-sm-outline">View</a>
+                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card" data-name="Mercedes S-Class" data-type="Luxury">
+                <div class="car-image-wrap">
+                    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80" alt="Mercedes S-Class">
+                    <span class="car-badge badge-luxury">Luxury</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-name">Mercedes S-Class</div>
+                    <div class="car-specs">
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>5 Seats</div>
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                    </div>
+                    <div class="car-footer">
+                        <div class="car-price">₹12,000 <span>/day</span></div>
+                        <div class="car-actions">
+                            <a href="#" class="btn-sm btn-sm-outline">View</a>
+                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card" data-name="Tesla Model S" data-type="Electric">
+                <div class="car-image-wrap">
+                    <img src="https://images.unsplash.com/photo-1561580125-028ee3bd62eb?w=600&q=80" alt="Tesla Model S">
+                    <span class="car-badge" style="background:#0284C7">Electric</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-name">Tesla Model S</div>
+                    <div class="car-specs">
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>5 Seats</div>
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                    </div>
+                    <div class="car-footer">
+                        <div class="car-price">₹13,000 <span>/day</span></div>
+                        <div class="car-actions">
+                            <a href="#" class="btn-sm btn-sm-outline">View</a>
+                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card" data-name="Lamborghini Huracan" data-type="Sports">
+                <div class="car-image-wrap">
+                    <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&q=80" alt="Lamborghini Huracan">
+                    <span class="car-badge" style="background:#7C3AED">Sports</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-name">Lamborghini Huracan</div>
+                    <div class="car-specs">
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>2 Seats</div>
+                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                    </div>
+                    <div class="car-footer">
+                        <div class="car-price">₹30,000 <span>/day</span></div>
+                        <div class="car-actions">
+                            <a href="#" class="btn-sm btn-sm-outline">View</a>
+                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section id="why">
+        <div class="section-header reveal">
+            <h2>Why Choose Us</h2>
+            <div class="divider"><span></span><i>◆</i><span></span></div>
+        </div>
+        <div class="why-grid">
+            <div class="why-card reveal">
+                <div class="why-icon" style="background:rgba(234,88,12,0.12)">⚡</div>
+                <h3>Instant Booking</h3>
+                <p>Book your car in seconds with our streamlined, hassle-free process.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon" style="background:rgba(37,99,235,0.12)">🛡</div>
+                <h3>Fully Insured</h3>
+                <p>All vehicles come with comprehensive insurance coverage for total peace of mind.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon" style="background:rgba(201,168,76,0.12)">💎</div>
+                <h3>Premium Fleet</h3>
+                <p>Choose from our curated collection of luxury and premium vehicles.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon" style="background:rgba(255,255,255,0.06)">🔧</div>
+                <h3>Well Maintained</h3>
+                <p>Regular maintenance ensures every vehicle performs at its very best.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon" style="background:rgba(234,179,8,0.10)">⏱</div>
+                <h3>Best Prices</h3>
+                <p>Competitive rates with absolutely no hidden fees — ever.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon" style="background:rgba(244,63,94,0.10)">📞</div>
+                <h3>24/7 Support</h3>
+                <p>Round-the-clock customer support available for your complete convenience.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials">
+        <div class="section-header reveal">
+            <h2>What Our Customers Say</h2>
+            <div class="divider"><span></span><i>◆</i><span></span></div>
+        </div>
+        <div class="testi-grid">
+            <div class="testi-card reveal">
+                <div class="testi-header">
+                    <div class="testi-avatar">BG</div>
+                    <div>
+                        <div class="testi-name">Bhoomin Gorasiya</div>
+                        <div class="testi-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p class="testi-text">Excellent service! The car was in perfect condition and the booking process was seamless.</p>
+            </div>
+            <div class="testi-card reveal">
+                <div class="testi-header">
+                    <div class="testi-avatar">PV</div>
+                    <div>
+                        <div class="testi-name">Prince Viradiya</div>
+                        <div class="testi-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p class="testi-text">Best car rental experience ever. Professional staff and absolutely amazing vehicles.</p>
+            </div>
+            <div class="testi-card reveal">
+                <div class="testi-header">
+                    <div class="testi-avatar">KH</div>
+                    <div>
+                        <div class="testi-name">Krish Halai</div>
+                        <div class="testi-stars">★★★★☆</div>
+                    </div>
+                </div>
+                <p class="testi-text">Great selection of cars and competitive prices. Highly recommended!</p>
+            </div>
+            <div class="testi-card reveal">
+                <div class="testi-header">
+                    <div class="testi-avatar">YD</div>
+                    <div>
+                        <div class="testi-name">Yuvraj Dadhal</div>
+                        <div class="testi-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p class="testi-text">Smooth rental process and excellent customer support. Will definitely use again.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-header reveal">
+            <h2>Get In Touch</h2>
+            <div class="divider"><span></span><i>◆</i><span></span></div>
+        </div>
+        <div class="contact-wrap">
+            <div class="contact-info reveal">
+                <h3>Contact Information</h3>
+                <div class="contact-item">
+                    <div class="contact-item-icon">📍</div>
+                    <div class="contact-item-text">
+                        <label>Address</label>
+                        <p>123 Main Street, New York, NY 10001</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">📞</div>
+                    <div class="contact-item-text">
+                        <label>Phone</label>
+                        <p>+91 43566 78345</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">✉️</div>
+                    <div class="contact-item-text">
+                        <label>Email</label>
+                        <p>luxedrive@gmail.com</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">🕐</div>
+                    <div class="contact-item-text">
+                        <label>Hours</label>
+                        <p>24/7 Available</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form reveal">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-input" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea class="form-textarea" placeholder="How can we help you?"></textarea>
+                </div>
+                <button class="btn-gold" onclick="submitForm()">Send Message</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="brand-name">🛡 LUXE DRIVE</div>
+                <p>Experience premium car rentals with exceptional service and quality vehicles. Luxury at your fingertips.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="#hero">Home</a>
+                <a href="#cars">Our Fleet</a>
+                <a href="#">Pricing</a>
+                <a href="#">About Us</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <a href="#">FAQ</a>
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Help</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p>luxedrive@gmail.com<br>+91 43566 78345<br>24/7 Support</p>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 LUXE DRIVE. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // ── HERO SLIDESHOW ──
+        let slide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots   = document.querySelectorAll('.hero-dot');
+
+        function goSlide(n) {
+          slides[slide].classList.remove('active');
+          dots[slide].classList.remove('active');
+          slide = n;
+          slides[slide].classList.add('active');
+          dots[slide].classList.add('active');
+        }
+
+        setInterval(() => goSlide((slide + 1) % slides.length), 5000);
+
+        // ── SCROLL REVEAL ──
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              setTimeout(() => e.target.classList.add('visible'), i * 80);
+              observer.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => observer.observe(el));
+
+        // ── CAR FILTER ──
+        function filterCars() {
+          const query = document.getElementById('searchInput').value.toLowerCase();
+          const type  = document.getElementById('typeFilter').value;
+          document.querySelectorAll('.car-card').forEach(card => {
+            const name = card.dataset.name.toLowerCase();
+            const t    = card.dataset.type;
+            const show = name.includes(query) && (!type || t === type);
+            card.style.display = show ? '' : 'none';
+          });
+        }
+
+        // ── FORM SUBMIT ──
+        function submitForm() {
+          const btn = event.target;
+          btn.textContent = '✓ Message Sent!';
+          btn.style.background = '#16a34a';
+          setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; }, 3000);
+        }
+
+        // ── STICKY NAV SHADOW ──
+        window.addEventListener('scroll', () => {
+          document.querySelector('nav').style.boxShadow =
+            window.scrollY > 60 ? '0 4px 30px rgba(0,0,0,0.6)' : 'none';
+        });
+    </script>
+</body>
+</html>

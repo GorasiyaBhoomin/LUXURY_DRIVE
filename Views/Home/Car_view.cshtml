@@ -1,0 +1,322 @@
+﻿@{
+    Layout = null;
+
+    ViewData["Title"] = "Car_view";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details – LUXE DRIVE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/carview.css" asp-append-version="true" />
+
+</head>
+<body class="page-enter">
+
+    <div class="page-transition" id="pageTransition"></div>
+
+    <!-- NAV -->
+    <nav>
+        <a href="Home/Index" class="nav-logo" onclick="goToPage('Index', event)">
+            <div>
+                <div class="brand">LUXE DRIVE</div>
+                <div class="sub">Premium Rentals</div>
+            </div>
+        </a>
+        <a href="Home/Index" class="nav-back" onclick="goToPage('Index', event)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6" /></svg>
+            Back to Fleet
+        </a>
+    </nav>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="Home/Index" onclick="goToPage('Index', event)">Home</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6" /></svg>
+
+        <span id="breadCar">Loading...</span>
+    </div>
+
+    <!-- MAIN DETAIL -->
+    <div class="car-detail-wrap">
+
+        <!-- LEFT: GALLERY -->
+        <div class="car-gallery">
+            <div class="main-img-wrap">
+                <img class="main-img" id="mainImg" src="" alt="">
+                <div class="main-img-overlay"></div>
+                <div class="car-type-ribbon" id="typeRibbon">—</div>
+            </div>
+            <div class="thumb-row" id="thumbRow"></div>
+            <div class="stats-bar" id="statsBar">
+                <div class="stat-item"><div class="stat-icon">⚡</div><span class="stat-val" id="stat0">—</span><span class="stat-lbl">0–100 km/h</span></div>
+                <div class="stat-item"><div class="stat-icon">🔝</div><span class="stat-val" id="stat1">—</span><span class="stat-lbl">Top Speed</span></div>
+                <div class="stat-item"><div class="stat-icon">🐎</div><span class="stat-val" id="stat2">—</span><span class="stat-lbl">Horsepower</span></div>
+                <div class="stat-item"><div class="stat-icon">⛽</div><span class="stat-val" id="stat3">—</span><span class="stat-lbl">Mileage</span></div>
+            </div>
+        </div>
+
+        <!-- RIGHT: DETAILS -->
+        <div class="car-details-col">
+            <div class="car-eyebrow" id="carEyebrow">Premium Fleet</div>
+            <h1 class="car-title" id="carTitle">Loading...</h1>
+            <div class="car-subtitle" id="carSubtitle">—</div>
+
+            <div class="price-block">
+                <div class="price-main" id="carPrice">—</div>
+                <div class="price-period">/ day</div>
+                <div class="price-note">Inclusive of taxes</div>
+            </div>
+
+            <div class="specs-title">Specifications</div>
+            <div class="specs-table" id="specsTable"></div>
+
+            <div class="desc-block">
+                <div class="specs-title">About This Car</div>
+                <p class="desc-text" id="carDesc">—</p>
+            </div>
+
+            <div class="specs-title">Key Features</div>
+            <div class="features-grid" id="featuresGrid"></div>
+
+            <div class="cta-area">
+                <a href="#" class="btn-gold-lg" id="rentBtn" onclick="goToBooking(event)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    Rent Now
+                </a>
+                <a href="Home/Index" class="btn-outline-lg" onclick="goToPage('Index', event)">← Back</a>
+            </div>
+        </div>
+    </div>
+
+   
+
+    <script>
+        // CAR DATA
+        const CARS = {
+            'bmw-m5': {
+                name: 'BMW M5', type: 'Luxury', subtitle: 'Competition · 2024 Model',
+                price: '₹10,000', priceNum: 10000,
+                img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&q=85',
+                
+                stats: ['3.5s','305 km/h','600 HP','12 km/l'],
+                specs: [
+                    {icon:'🚗', key:'Type', val:'Luxury Sedan'},
+                    {icon:'👥', key:'Seats', val:'4 Passengers'},
+                    {icon:'⚙️', key:'Transmission', val:'Automatic (8-Speed)'},
+                    {icon:'⛽', key:'Fuel', val:'Petrol'},
+                    {icon:'📅', key:'Year', val:'2024'},
+                    {icon:'🎨', key:'Color', val:'Carbon Black'},
+                ],
+                features: ['Adaptive Cruise Control','Heated Seats','360° Camera','Ambient Lighting','Wireless Charging','Bang & Olufsen Audio','Head-Up Display','Keyless Entry'],
+                desc: 'The BMW M5 Competition is the pinnacle of performance sedans, combining jaw-dropping speed with everyday refinement. Powered by a 4.4-litre V8 twin-turbo engine delivering 600hp, it blasts from 0–100 km/h in just 3.3 seconds while keeping you wrapped in supreme luxury.',
+            },
+            'audi-r8': {
+                name: 'Audi R8', type: 'Sports', subtitle: 'V10 Performance · 2024',
+                price: '₹20,000', priceNum: 20000,
+                img: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=1200&q=85',
+                thumbs: [
+                    'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400&q=70',
+                    'https://images.unsplash.com/photo-1580414057403-c5f451f30e1c?w=400&q=70',
+                    'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=70',
+                ],
+                stats: ['3.2s','330 km/h','620 HP','8 km/l'],
+                specs: [
+                    {icon:'🚗', key:'Type', val:'Sports Coupe'},
+                    {icon:'👥', key:'Seats', val:'2 Passengers'},
+                    {icon:'⚙️', key:'Transmission', val:'S-Tronic (7-Speed)'},
+                    {icon:'⛽', key:'Fuel', val:'Petrol'},
+                    {icon:'📅', key:'Year', val:'2024'},
+                    {icon:'🎨', key:'Color', val:'Ibis White'},
+                ],
+                features: ['Launch Control','Magnetic Ride','Dynamic Steering','Carbon Ceramic Brakes','Virtual Cockpit','Bang & Olufsen 3D','Audi Drive Select','Sport Exhaust'],
+                desc: 'The Audi R8 V10 Performance is a naturally aspirated supercar like no other. With its mid-mounted V10 engine screaming to 8,700 rpm and quattro all-wheel drive, it delivers a pure, visceral driving experience wrapped in stunning Italian-designed bodywork.',
+            },
+            'range-rover': {
+                name: 'Range Rover Velar', type: 'SUV', subtitle: 'P400 R-Dynamic · 2024',
+                price: '₹15,000', priceNum: 15000,
+                img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200&q=85',
+                thumbs: [
+                    'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&q=70',
+                    'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=400&q=70',
+                    'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=400&q=70',
+                ],
+                stats: ['5.3s','250 km/h','400 HP','11 km/l'],
+                specs: [
+                    {icon:'🚗', key:'Type', val:'Luxury SUV'},
+                    {icon:'👥', key:'Seats', val:'5 Passengers'},
+                    {icon:'⚙️', key:'Transmission', val:'Automatic (8-Speed)'},
+                    {icon:'⛽', key:'Fuel', val:'Petrol'},
+                    {icon:'📅', key:'Year', val:'2024'},
+                    {icon:'🎨', key:'Color', val:'Fuji White'},
+                ],
+                features: ['Terrain Response 2','Air Suspension','Panoramic Roof','Meridian Sound','Touch Pro Duo','Wade Sensing','Activity Key','Adaptive Dynamics'],
+                desc: 'The Range Rover Velar redefines the SUV segment with its breathtaking design, advanced technology and outstanding capability. The perfect blend of sporting performance and supreme luxury, it commands attention wherever it goes.',
+            },
+            'mercedes-s': {
+                name: 'Mercedes S-Class', type: 'Luxury', subtitle: 'S 500 4MATIC · 2024',
+                price: '₹12,000', priceNum: 12000,
+                img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&q=85',
+                thumbs: [
+                    'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&q=70',
+                    'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=70',
+                    'https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=400&q=70',
+                ],
+                stats: ['4.3s','250 km/h','435 HP','13 km/l'],
+                specs: [
+                    {icon:'🚗', key:'Type', val:'Luxury Saloon'},
+                    {icon:'👥', key:'Seats', val:'5 Passengers'},
+                    {icon:'⚙️', key:'Transmission', val:'9G-TRONIC'},
+                    {icon:'⛽', key:'Fuel', val:'Petrol'},
+                    {icon:'📅', key:'Year', val:'2024'},
+                    {icon:'🎨', key:'Color', val:'Obsidian Black'},
+                ],
+                features: ['MBUX Hyperscreen','Burmester 4D Audio','Rear Lounge Package','Active Ambient Lighting','Augmented Reality Nav','E-Active Body Control','Digital Light','Fragrance System'],
+                desc: 'The Mercedes-Benz S-Class represents the very best in automotive luxury. Every journey becomes an indulgent experience with its massaging seats, perfume atomiser, cinema-quality rear screens and the world-first MBUX Hyperscreen stretching the full width of the dashboard.',
+            },
+            'tesla-model-s': {
+                name: 'Tesla Model S', type: 'Electric', subtitle: 'Plaid · 2024',
+                price: '₹13,000', priceNum: 13000,
+                img: 'https://images.unsplash.com/photo-1561580125-028ee3bd62eb?w=1200&q=85',
+                thumbs: [
+                    'https://images.unsplash.com/photo-1561580125-028ee3bd62eb?w=400&q=70',
+                    'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400&q=70',
+                    'https://images.unsplash.com/photo-1622122201714-77da0ca8e5d2?w=400&q=70',
+                ],
+                stats: ['1.99s','322 km/h','1020 HP','637 km'],
+                specs: [
+                    {icon:'🚗', key:'Type', val:'Electric Sedan'},
+                    {icon:'👥', key:'Seats', val:'5 Passengers'},
+                    {icon:'⚙️', key:'Transmission', val:'Single-Speed'},
+                    {icon:'⛽', key:'Fuel', val:'Electric'},
+                    {icon:'📅', key:'Year', val:'2024'},
+                    {icon:'🎨', key:'Color', val:'Midnight Silver'},
+                ],
+                features: ['Autopilot FSD','17" Touchscreen','Gaming Console','Ludicrous Mode','Over-The-Air Updates','Supercharger Access','HEPA Filter','Sentry Mode'],
+                desc: 'The Tesla Model S Plaid is the world\'s quickest production car with a 0–100 km/h time of under 2 seconds. Three independent motors deliver 1,020 hp and a range of 637 km on a single charge — redefining what an electric vehicle can be.',
+            },
+            'lambo-huracan': {
+                name: 'Lamborghini Huracán', type: 'Sports', subtitle: 'EVO · 2024',
+                price: '₹30,000', priceNum: 30000,
+                img: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=1200&q=85',
+                thumbs: [
+                    'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400&q=70',
+                    'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=400&q=70',
+                    'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=70',
+                ],
+                stats: ['2.9s','325 km/h','640 HP','6 km/l'],
+                specs: [
+                    {icon:'🚗', key:'Type', val:'Super Sports Car'},
+                    {icon:'👥', key:'Seats', val:'2 Passengers'},
+                    {icon:'⚙️', key:'Transmission', val:'Dual-Clutch (7-Speed)'},
+                    {icon:'⛽', key:'Fuel', val:'Petrol'},
+                    {icon:'📅', key:'Year', val:'2024'},
+                    {icon:'🎨', key:'Color', val:'Arancio Borealis'},
+                ],
+                features: ['LDVI System','Magnetic Suspension','ALA Aerodynamics','Lift System','Drive Select Modes','Carbon Ceramic Brakes','Front Camera','Track Timer'],
+                desc: 'The Lamborghini Huracán EVO is a masterpiece of Italian engineering — a naturally-aspirated V10 howls to 8,000 rpm, producing 640 hp. The Lamborghini Dinamica Veicolo Integrata system links all major dynamic controls for an exhilarating, yet accessible supercar experience.',
+            },
+        };
+
+        const SIMILAR_MAP = {
+            'bmw-m5': ['mercedes-s','audi-r8','lambo-huracan'],
+            'audi-r8': ['lambo-huracan','bmw-m5','tesla-model-s'],
+            'range-rover': ['bmw-m5','mercedes-s','tesla-model-s'],
+            'mercedes-s': ['bmw-m5','range-rover','audi-r8'],
+            'tesla-model-s': ['bmw-m5','mercedes-s','range-rover'],
+            'lambo-huracan': ['audi-r8','bmw-m5','mercedes-s'],
+        };
+
+        function goToPage(url, e) {
+            if (e) e.preventDefault();
+            const t = document.getElementById('pageTransition');
+            t.classList.add('leaving');
+            setTimeout(() => { window.location.href = url; }, 480);
+        }
+
+        function goToBooking(e) {
+            e.preventDefault();
+            goToPage('car-book.html?id=' + currentId);
+        }
+
+        let currentId = '';
+        let currentCar = null;
+
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            currentId = params.get('id') || 'bmw-m5';
+            currentCar = CARS[currentId];
+            if (!currentCar) { window.location.href = 'home.html'; return; }
+
+            document.title = currentCar.name + ' – LUXE DRIVE';
+            document.getElementById('breadCar').textContent = currentCar.name;
+            document.getElementById('carEyebrow').textContent = currentCar.type + ' · Premium Fleet';
+            document.getElementById('carTitle').textContent = currentCar.name;
+            document.getElementById('carSubtitle').textContent = currentCar.subtitle;
+            document.getElementById('carPrice').textContent = currentCar.price;
+            document.getElementById('typeRibbon').textContent = currentCar.type;
+            document.getElementById('carDesc').textContent = currentCar.desc;
+
+            // MAIN IMAGE
+            document.getElementById('mainImg').src = currentCar.img;
+            document.getElementById('mainImg').alt = currentCar.name;
+
+            // STATS
+            currentCar.stats.forEach((s, i) => { document.getElementById('stat' + i).textContent = s; });
+
+            // THUMBNAILS
+            const thumbRow = document.getElementById('thumbRow');
+            currentCar.thumbs.forEach((src, i) => {
+                const img = document.createElement('img');
+                img.className = 'thumb' + (i === 0 ? ' active' : '');
+                img.src = src;
+                img.alt = currentCar.name;
+                img.onclick = () => {
+                    document.getElementById('mainImg').src = src;
+                    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                    img.classList.add('active');
+                };
+                thumbRow.appendChild(img);
+            });
+
+            // SPECS
+            const specsTable = document.getElementById('specsTable');
+            currentCar.specs.forEach((s, i) => {
+                const row = document.createElement('div');
+                row.className = 'spec-row';
+                row.innerHTML = `<div class="spec-key"><div class="spec-key-icon">${s.icon}</div>${s.key}</div><div class="spec-val">${s.val}</div>`;
+                row.style.animationDelay = (i * 0.07) + 's';
+                specsTable.appendChild(row);
+                setTimeout(() => row.classList.add('visible'), 100 + i * 70);
+            });
+
+            // FEATURES
+            const featGrid = document.getElementById('featuresGrid');
+            currentCar.features.forEach(f => {
+                const div = document.createElement('div');
+                div.className = 'feature-tag';
+                div.innerHTML = `<div class="feature-tag-dot"></div>${f}`;
+                featGrid.appendChild(div);
+            });
+
+            // SIMILAR CARS
+            const simIds = SIMILAR_MAP[currentId] || [];
+            const simGrid = document.getElementById('similarGrid');
+            simIds.forEach(id => {
+                const c = CARS[id];
+                if (!c) return;
+                const div = document.createElement('div');
+                div.className = 'sim-card';
+                div.innerHTML = `<img src="${c.thumbs[0]}" alt="${c.name}"><div class="sim-info"><div class="sim-name">${c.name}</div><div class="sim-price">${c.price} <span>/day</span></div></div>`;
+                div.onclick = () => goToPage('car-view.html?id=' + id);
+                simGrid.appendChild(div);
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>

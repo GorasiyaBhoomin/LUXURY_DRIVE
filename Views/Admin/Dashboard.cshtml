@@ -1,0 +1,149 @@
+﻿
+@{
+    Layout = null;
+
+    ViewData["Title"] = "Dashboard";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Drive – Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/dasboard.css" asp-append-version="true" />
+
+</head>
+<body>
+
+    <!-- ── SIDEBAR ── -->
+    <aside>
+        <div class="brand">
+            <div class="brand-icon">🚘</div>
+            <div>
+                <div class="brand-name">LUXE DRIVE</div>
+                <div class="brand-role">Admin</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="#" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                Dashboard
+            </a>
+            <a href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="13" y2="16" /></svg>
+                Bookings
+            </a>
+            <a href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /><circle cx="7" cy="14" r="1" fill="currentColor" /><circle cx="17" cy="14" r="1" fill="currentColor" /></svg>
+                Vehicles
+            </a>
+            <a href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                Customers
+            </a>
+            <a href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                Profile
+            </a>
+        </nav>
+
+        <div class="user-footer">
+            <div class="avatar">A</div>
+            <div class="user-info">
+                <div class="user-name">Admin</div>
+                <div class="user-email">admin@admin.com</div>
+            </div>
+            <button class="logout-btn" title="Logout">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main>
+        <header>
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage bookings and monitor performance</p>
+            </div>
+            <button class="export-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                Export Report
+            </button>
+        </header>
+
+        <div class="content">
+
+            <!-- STAT CARDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-gold">📊</div>
+                    <div>
+                        <div class="stat-label">Total Bookings</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-orange">⏱</div>
+                    <div>
+                        <div class="stat-label">Pending</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green">✓</div>
+                    <div>
+                        <div class="stat-label">Confirmed</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-gold">₹</div>
+                    <div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">₹0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECENT BOOKINGS -->
+            <div class="bookings-card">
+                <div class="bookings-header">Recent Bookings</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CUSTOMER</th>
+                            <th>VEHICLE</th>
+                            <th>DURATION</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-title">No bookings yet</div>
+                    <div class="empty-sub">Bookings will appear here once customers make reservations</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Sidebar active link switching
+        document.querySelectorAll('nav a').forEach(link => {
+          link.addEventListener('click', e => {
+            e.preventDefault();
+            document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+          });
+        });
+    </script>
+</body>
+</html>
+

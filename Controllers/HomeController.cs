@@ -15,7 +15,7 @@ namespace LUXURY_DRIVE.Controllers
             return View();
         }
 
-        public IActionResult Car_book()
+        public IActionResult Car_rent()
         {
             return View();
         }

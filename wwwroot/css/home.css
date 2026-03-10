@@ -26,6 +26,11 @@ body {
     background: var(--black);
     color: var(--white);
     font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: normal;
+    text-transform: none;
     overflow-x: hidden;
     cursor: default;
     width: 100%;
@@ -116,18 +121,20 @@ nav {
 }
 
     .nav-logo-text .brand {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 16px;
         font-weight: 700;
         color: var(--gold);
-        letter-spacing: 2px;
+        letter-spacing: 1px;
+        text-transform: none;
     }
 
     .nav-logo-text .sub {
-        font-size: 9px;
+        font-size: 10px;
         color: var(--grey);
-        letter-spacing: 3px;
-        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-transform: none;
+        font-weight: 400;
     }
 
 .nav-links {
@@ -140,9 +147,9 @@ nav {
         color: var(--white);
         text-decoration: none;
         font-size: 13px;
-        font-weight: 500;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        font-weight: 400;
+        letter-spacing: normal;
+        text-transform: none;
         position: relative;
         transition: color 0.3s;
     }
@@ -277,10 +284,11 @@ footer {
 }
 
 .hero-eyebrow {
-    font-size: 11px;
-    letter-spacing: 6px;
+    font-size: 12px;
+    letter-spacing: 2px;
     color: var(--gold);
-    text-transform: uppercase;
+    text-transform: none;
+    font-weight: 400;
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -297,26 +305,27 @@ footer {
     }
 
 .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 8vw, 100px);
-    font-weight: 300;
-    line-height: 1.0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 700;
+    line-height: 1.1;
     color: var(--white);
-    letter-spacing: -1px;
+    letter-spacing: normal;
     margin-bottom: 20px;
+    text-transform: none;
 }
 
     .hero-title em {
-        font-style: italic;
+        font-style: normal;
         color: var(--gold);
     }
 
 .hero-sub {
     font-size: 14px;
     color: rgba(245,240,232,0.65);
-    letter-spacing: 1px;
+    letter-spacing: normal;
     margin-bottom: 44px;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .hero-ctas {
@@ -329,10 +338,10 @@ footer {
     padding: 14px 36px;
     background: var(--gold);
     color: var(--black);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
     text-decoration: none;
     cursor: pointer;
     border: none;
@@ -352,15 +361,16 @@ footer {
     padding: 13px 36px;
     background: transparent;
     color: var(--white);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
     text-decoration: none;
     cursor: pointer;
     border: 1px solid rgba(245,240,232,0.35);
     transition: all 0.3s;
     display: inline-block;
+    font-family: 'Montserrat', sans-serif;
 }
 
     .btn-outline:hover {
@@ -397,10 +407,11 @@ footer {
     bottom: 36px;
     right: 60px;
     z-index: 2;
-    font-size: 10px;
-    letter-spacing: 3px;
+    font-size: 11px;
+    letter-spacing: 1px;
     color: var(--grey);
-    text-transform: uppercase;
+    text-transform: none;
+    font-weight: 400;
     writing-mode: vertical-rl;
     display: flex;
     align-items: center;
@@ -433,13 +444,14 @@ footer {
 }
 
 .search-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 38px;
-    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 26px;
+    font-weight: 600;
     color: var(--gold);
     text-align: center;
     margin-bottom: 32px;
-    letter-spacing: 1px;
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 .search-bar {
@@ -470,6 +482,8 @@ footer {
     color: var(--white);
     font-size: 14px;
     font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: normal;
     transition: border-color 0.3s;
     outline: none;
 }
@@ -480,6 +494,7 @@ footer {
 
     .search-input::placeholder {
         color: var(--grey);
+        font-weight: 400;
     }
 
 .search-select {
@@ -489,6 +504,8 @@ footer {
     color: var(--white);
     font-size: 13px;
     font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: normal;
     outline: none;
     cursor: pointer;
     min-width: 140px;
@@ -510,11 +527,12 @@ footer {
 }
 
     .section-header h2 {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: clamp(36px, 5vw, 58px);
-        font-weight: 300;
+        font-family: 'Montserrat', sans-serif;
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 700;
         color: var(--gold);
-        letter-spacing: 1px;
+        letter-spacing: normal;
+        text-transform: none;
     }
 
     .section-header .divider {
@@ -533,9 +551,10 @@ footer {
 
         .section-header .divider i {
             color: var(--gold);
-            font-size: 10px;
-            letter-spacing: 2px;
+            font-size: 11px;
+            letter-spacing: normal;
             font-style: normal;
+            font-weight: 400;
         }
 
 /* ─── CARS SECTION ─── */
@@ -625,10 +644,10 @@ footer {
     right: 12px;
     background: var(--gold);
     color: var(--black);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
     padding: 5px 12px;
     border-radius: 20px;
 }
@@ -638,11 +657,13 @@ footer {
 }
 
 .car-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
     font-weight: 600;
     color: var(--white);
     margin-bottom: 12px;
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 .car-specs {
@@ -655,9 +676,10 @@ footer {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--grey);
-    letter-spacing: 0.5px;
+    letter-spacing: normal;
+    font-weight: 400;
 }
 
     .car-spec svg {
@@ -671,13 +693,14 @@ footer {
 }
 
 .car-price {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--gold);
+    letter-spacing: normal;
 }
 
     .car-price span {
-        font-size: 11px;
+        font-size: 12px;
         color: var(--grey);
         font-weight: 400;
     }
@@ -689,10 +712,10 @@ footer {
 
 .btn-sm {
     padding: 8px 18px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
     cursor: pointer;
     border: none;
     transition: all 0.3s;
@@ -778,18 +801,21 @@ footer {
 }
 
 .why-card h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
     font-weight: 600;
     margin-bottom: 12px;
     color: var(--white);
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 .why-card p {
     font-size: 13px;
     color: var(--grey);
     line-height: 1.7;
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: normal;
 }
 
 /* ─── TESTIMONIALS ─── */
@@ -844,26 +870,28 @@ footer {
     font-size: 14px;
     margin-bottom: 4px;
     color: var(--white);
+    letter-spacing: normal;
 }
 
 .testi-stars {
     color: var(--gold);
     font-size: 13px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 .testi-text {
     font-size: 13px;
     color: rgba(245,240,232,0.65);
     line-height: 1.7;
-    font-weight: 300;
-    font-style: italic;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: normal;
 }
 
     .testi-text::before {
         content: '"';
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 40px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 36px;
         color: var(--gold-dim);
         line-height: 0;
         vertical-align: -14px;
@@ -887,11 +915,13 @@ footer {
 }
 
 .contact-info h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
     color: var(--white);
     margin-bottom: 32px;
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 .contact-item {
@@ -913,10 +943,11 @@ footer {
 }
 
 .contact-item-text label {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--gold);
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
+    font-weight: 500;
     display: block;
     margin-bottom: 4px;
 }
@@ -924,7 +955,8 @@ footer {
 .contact-item-text p {
     font-size: 14px;
     color: rgba(245,240,232,0.7);
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: normal;
 }
 
 .contact-form {
@@ -940,10 +972,11 @@ footer {
 }
 
     .form-group label {
-        font-size: 11px;
+        font-size: 12px;
         color: var(--gold);
-        letter-spacing: 2px;
-        text-transform: uppercase;
+        letter-spacing: normal;
+        text-transform: none;
+        font-weight: 500;
     }
 
 .form-input,
@@ -954,6 +987,8 @@ footer {
     padding: 14px 16px;
     font-size: 13px;
     font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: normal;
     outline: none;
     transition: border-color 0.3s;
     width: 100%;
@@ -989,10 +1024,12 @@ footer {
 }
 
 .footer-brand .brand-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
     color: var(--gold);
-    letter-spacing: 3px;
+    letter-spacing: 1px;
+    text-transform: none;
     margin-bottom: 16px;
     display: flex;
     align-items: center;
@@ -1003,15 +1040,17 @@ footer {
     font-size: 13px;
     color: var(--grey);
     line-height: 1.7;
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: normal;
     max-width: 260px;
 }
 
 .footer-col h4 {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--gold);
-    letter-spacing: 3px;
-    text-transform: uppercase;
+    letter-spacing: normal;
+    text-transform: none;
+    font-weight: 600;
     margin-bottom: 20px;
 }
 
@@ -1021,7 +1060,8 @@ footer {
     text-decoration: none;
     font-size: 13px;
     margin-bottom: 10px;
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: normal;
     transition: color 0.3s;
 }
 
@@ -1033,14 +1073,16 @@ footer {
     font-size: 13px;
     color: var(--grey);
     line-height: 1.8;
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: normal;
 }
 
 .footer-bottom {
     text-align: center;
     font-size: 12px;
     color: rgba(136,136,136,0.5);
-    letter-spacing: 1px;
+    letter-spacing: normal;
+    font-weight: 400;
     max-width: 1600px;
     margin: 0 auto;
 }
@@ -1119,7 +1161,7 @@ footer {
     }
 
     .hero-title {
-        font-size: 52px;
+        font-size: 40px;
     }
 }
 
@@ -1138,6 +1180,7 @@ footer {
         align-items: center;
     }
 }
+
 .nav-avatar {
     cursor: pointer;
 }

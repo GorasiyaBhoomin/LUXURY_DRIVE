@@ -282,7 +282,7 @@ header {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    overflow: hidden; /* keep rounded corners */
+    overflow: hidden;
 }
 
 table {
@@ -424,18 +424,33 @@ tbody tr:hover .vehicle-thumb img {
     font-size: 14px;
 }
 
-/* ── BADGES ── */
+/* ── STATUS CELL ── */
+.status-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+/* ── BADGE (now a clickable button) ── */
 .badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
+    gap: 6px;
+    padding: 5px 10px 5px 8px;
     border-radius: 20px;
     font-size: 11px;
     font-weight: 600;
-    transition: background .25s ease, color .25s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: background .2s ease, color .2s ease, opacity .15s;
+    user-select: none;
 }
 
+    .badge:hover {
+        opacity: .85;
+    }
+
+    /* dot */
     .badge::before {
         content: '';
         width: 6px;
@@ -443,6 +458,19 @@ tbody tr:hover .vehicle-thumb img {
         border-radius: 50%;
         flex-shrink: 0;
     }
+
+/* chevron svg inside badge */
+.badge-chevron {
+    width: 10px;
+    height: 10px;
+    opacity: .7;
+    transition: transform .2s ease;
+    flex-shrink: 0;
+}
+
+.status-wrap.open .badge-chevron {
+    transform: rotate(180deg);
+}
 
 .badge-confirmed {
     background: rgba(45,181,104,.12);
@@ -480,17 +508,18 @@ tbody tr:hover .vehicle-thumb img {
         background: var(--blue);
     }
 
+/* pop animation on status change */
 @keyframes badgeFlash {
     0% {
         transform: scale(1);
     }
 
     40% {
-        transform: scale(1.2);
+        transform: scale(1.18);
     }
 
     70% {
-        transform: scale(0.93);
+        transform: scale(0.94);
     }
 
     100% {
@@ -499,80 +528,14 @@ tbody tr:hover .vehicle-thumb img {
 }
 
 .badge-flash {
-    animation: badgeFlash .5s cubic-bezier(.36,.07,.19,.97) both;
+    animation: badgeFlash .45s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-/* ── ACTIONS ── */
-.actions-cell {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.action-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-    font-size: 13px;
-}
-
-    .action-btn:hover {
-        border-color: var(--gold);
-        color: var(--gold);
-        background: var(--gold-dim);
-    }
-
-/* ── DOTS BUTTON ── */
-.dots-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    line-height: 1;
-    padding-bottom: 3px;
-    transition: all .15s;
-}
-
-    .dots-btn:hover {
-        border-color: var(--subtle);
-        color: var(--text);
-    }
-
-.dropdown-wrap.open .dots-btn {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: var(--gold-dim);
-}
-
-/* ── DROPDOWN WRAPPER ── */
-.dropdown-wrap {
-    position: relative;
-}
-
-/* ── STATUS DROPDOWN PANEL ──
-   position:fixed + top/left set by JS so it sits exactly beside the ··· button
-   and escapes every overflow:hidden ancestor                                     */
+/* ── STATUS DROPDOWN (position:fixed, placed by JS) ── */
 .status-dropdown {
     position: fixed;
     top: 0;
-    left: 0; /* JS overrides these on open */
+    left: 0;
     width: 172px;
     background: #1e1e1e;
     border: 1px solid #333;
@@ -582,18 +545,17 @@ tbody tr:hover .vehicle-thumb img {
     box-shadow: 0 8px 28px rgba(0,0,0,0.75), 0 2px 6px rgba(0,0,0,0.4);
     opacity: 0;
     transform: scale(0.95) translateY(-4px);
-    transform-origin: top right;
+    transform-origin: top left;
     pointer-events: none;
     transition: opacity .18s ease, transform .18s ease;
 }
 
-.dropdown-wrap.open .status-dropdown {
+.status-wrap.open .status-dropdown {
     opacity: 1;
     transform: scale(1) translateY(0);
     pointer-events: all;
 }
 
-/* label */
 .dropdown-label {
     font-size: 10px;
     font-weight: 700;
@@ -605,7 +567,6 @@ tbody tr:hover .vehicle-thumb img {
     margin-bottom: 5px;
 }
 
-/* items */
 .dropdown-item {
     display: flex;
     align-items: center;
@@ -626,24 +587,24 @@ tbody tr:hover .vehicle-thumb img {
     transition: background .15s, color .15s, opacity .15s ease, transform .15s ease;
 }
 
-.dropdown-wrap.open .dropdown-item {
+.status-wrap.open .dropdown-item {
     opacity: 1;
     transform: translateX(0);
 }
 
-    .dropdown-wrap.open .dropdown-item:nth-child(2) {
+    .status-wrap.open .dropdown-item:nth-child(2) {
         transition-delay: .03s;
     }
 
-    .dropdown-wrap.open .dropdown-item:nth-child(3) {
+    .status-wrap.open .dropdown-item:nth-child(3) {
         transition-delay: .07s;
     }
 
-    .dropdown-wrap.open .dropdown-item:nth-child(4) {
+    .status-wrap.open .dropdown-item:nth-child(4) {
         transition-delay: .11s;
     }
 
-    .dropdown-wrap.open .dropdown-item:nth-child(5) {
+    .status-wrap.open .dropdown-item:nth-child(5) {
         transition-delay: .15s;
     }
 
@@ -689,6 +650,40 @@ tbody tr:hover .vehicle-thumb img {
 .dot-cancelled {
     background: var(--muted);
 }
+
+/* ── ACTIONS ── */
+.actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+    font-size: 13px;
+}
+
+    .action-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--gold-dim);
+    }
+
+    .action-btn.danger:hover {
+        border-color: #e05c2e;
+        color: #e05c2e;
+        background: rgba(224,92,46,.1);
+    }
 
 /* scrollbar */
 .content::-webkit-scrollbar {

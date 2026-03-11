@@ -1,0 +1,339 @@
+﻿@{
+    Layout = null;
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    ViewData["Title"] = "Adminbookings";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Drive – Bookings Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/Adminbookings.css" asp-append-version="true" />
+</head>
+<body>
+
+    <aside>
+        <div class="brand">
+            <div class="brand-icon">🚘</div>
+            <div>
+                <div class="brand-name">LUXE DRIVE</div>
+                <div class="brand-role">Admin</div>
+            </div>
+        </div>
+        <nav>
+            <a asp-controller="Admin" asp-action="Dashboard" class="@(action == "Dashboard" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                Dashboard
+            </a>
+            <a asp-controller="Admin" asp-action="Adminbookings" class="@(action == "Adminbookings" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="13" y2="16" /></svg>
+                Bookings
+            </a>
+            <a asp-controller="Admin" asp-action="AdminVehicles" class="@(action == "AdminVehicles" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /><circle cx="7" cy="14" r="1" fill="currentColor" /><circle cx="17" cy="14" r="1" fill="currentColor" /></svg>
+                Vehicles
+            </a>
+            <a asp-controller="Admin" asp-action="AdminCustomers" class="@(action == "AdminCustomers" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                Customers
+            </a>
+            <a asp-controller="Admin" asp-action="AdminProfile" class="@(action == "AdminProfile" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                Profile
+            </a>
+        </nav>
+        <div class="user-footer">
+            <div class="avatar">A</div>
+            <div>
+                <div class="user-name">Admin</div>
+                <div class="user-email">admin@luxedrive.com</div>
+            </div>
+            <button class="logout-btn" title="Logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1>Bookings Management</h1>
+                <p>View and manage all customer bookings</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-filter">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
+                    Filter
+                </button>
+                <button class="btn-export">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                    Export
+                </button>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="search-wrap">
+                <span class="search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                </span>
+                <input class="search-input" type="text" placeholder="Search bookings..." />
+            </div>
+
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CUSTOMER</th>
+                            <th>VEHICLE</th>
+                            <th>DURATION</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- Row 1 -->
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <span class="customer-name">Michael Chen</span>
+                                    <span class="customer-email">michael@example.com</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?w=120&q=70&fit=crop" alt="Mercedes-Benz S-Class" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">Mercedes-Benz S-Class</div>
+                                        <div class="vehicle-plate">LUX-001</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="duration-days">3 days</div>
+                                <div class="duration-range">14 Oct 2023 – 16 Oct 2023</div>
+                            </td>
+                            <td><span class="amount-val">$1,200</span></td>
+                            <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <div class="dropdown-wrap">
+                                        <button class="dots-btn" onclick="toggleDropdown(event, this)">···</button>
+                                        <div class="status-dropdown">
+                                            <div class="dropdown-label">Change Status</div>
+                                            <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
+                                            <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
+                                            <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
+                                            <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Row 2 -->
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <span class="customer-name">Sarah Johnson</span>
+                                    <span class="customer-email">sarah@example.com</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=120&q=70&fit=crop" alt="Porsche 911 Carrera" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">Porsche 911 Carrera</div>
+                                        <div class="vehicle-plate">FAST-911</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="duration-days">2 days</div>
+                                <div class="duration-range">09 Oct 2023 – 10 Oct 2023</div>
+                            </td>
+                            <td><span class="amount-val">$2,500</span></td>
+                            <td><span class="badge badge-pending">Pending</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <div class="dropdown-wrap">
+                                        <button class="dots-btn" onclick="toggleDropdown(event, this)">···</button>
+                                        <div class="status-dropdown">
+                                            <div class="dropdown-label">Change Status</div>
+                                            <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
+                                            <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
+                                            <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
+                                            <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Row 3 -->
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <span class="customer-name">James Williams</span>
+                                    <span class="customer-email">james@example.com</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=120&q=70&fit=crop" alt="BMW X7 M Sport" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">BMW X7 M Sport</div>
+                                        <div class="vehicle-plate">BMW-X7M</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="duration-days">5 days</div>
+                                <div class="duration-range">20 Oct 2023 – 24 Oct 2023</div>
+                            </td>
+                            <td><span class="amount-val">$3,750</span></td>
+                            <td><span class="badge badge-active">Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <div class="dropdown-wrap">
+                                        <button class="dots-btn" onclick="toggleDropdown(event, this)">···</button>
+                                        <div class="status-dropdown">
+                                            <div class="dropdown-label">Change Status</div>
+                                            <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
+                                            <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
+                                            <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
+                                            <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Row 4 -->
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <span class="customer-name">Priya Sharma</span>
+                                    <span class="customer-email">priya@example.com</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=120&q=70&fit=crop" alt="Tesla Model S Plaid" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">Tesla Model S Plaid</div>
+                                        <div class="vehicle-plate">ELEC-01</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="duration-days">1 day</div>
+                                <div class="duration-range">05 Oct 2023 – 06 Oct 2023</div>
+                            </td>
+                            <td><span class="amount-val">$850</span></td>
+                            <td><span class="badge badge-cancelled">Cancelled</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <div class="dropdown-wrap">
+                                        <button class="dots-btn" onclick="toggleDropdown(event, this)">···</button>
+                                        <div class="status-dropdown">
+                                            <div class="dropdown-label">Change Status</div>
+                                            <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
+                                            <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
+                                            <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
+                                            <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleDropdown(e, btn) {
+            e.stopPropagation();
+
+            const wrap     = btn.closest('.dropdown-wrap');
+            const dropdown = wrap.querySelector('.status-dropdown');
+            const isOpen   = wrap.classList.contains('open');
+
+            // close all first
+            closeAll();
+
+            if (!isOpen) {
+                // get exact screen position of the ··· button
+                const rect = btn.getBoundingClientRect();
+
+                // place dropdown just below the button, right-aligned to it
+                dropdown.style.top  = (rect.bottom + 4) + 'px';
+                dropdown.style.left = (rect.right - 172) + 'px'; // 172 = dropdown width
+
+                // if it would go off-screen to the left, clamp it
+                if (parseFloat(dropdown.style.left) < 8) {
+                    dropdown.style.left = '8px';
+                }
+
+                wrap.classList.add('open');
+            }
+        }
+
+        function closeAll() {
+            document.querySelectorAll('.dropdown-wrap.open').forEach(w => w.classList.remove('open'));
+        }
+
+        function setStatus(btn, label, badgeClass) {
+            const wrap  = btn.closest('.dropdown-wrap');
+            const badge = btn.closest('tr').querySelector('.badge');
+            badge.textContent = label;
+            badge.className   = 'badge ' + badgeClass + ' badge-flash';
+            setTimeout(() => badge.classList.remove('badge-flash'), 600);
+            wrap.classList.remove('open');
+        }
+
+        // close on outside click
+        document.addEventListener('click', closeAll);
+
+        // close if user scrolls (dropdown is fixed, would float away)
+        document.querySelector('.content').addEventListener('scroll', closeAll);
+
+        // search filter
+        document.querySelector('.search-input').addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('tbody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>

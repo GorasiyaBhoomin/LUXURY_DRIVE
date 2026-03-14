@@ -1,0 +1,1117 @@
+﻿@model LUXURY_DRIVE.Models.VehicleViewModel
+@{
+    Layout = null;
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    ViewData["Title"] = "AdminVehicles";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Drive – Vehicle Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/AdminVehicles.css" asp-append-version="true" />
+
+    <style>
+        /* ══════════════════════════════════════════
+                   ADD VEHICLE INLINE FORM  (NEW STYLES)
+                   ══════════════════════════════════════════ */
+
+        .add-form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 22px;
+            overflow: hidden;
+        }
+
+        /* ── clickable header row ── */
+        .add-form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            cursor: pointer;
+            user-select: none;
+            transition: background .15s;
+        }
+
+            .add-form-header:hover {
+                background: var(--surface2);
+            }
+
+        .add-form-header-left {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .add-form-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(45,181,104,.13);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .add-form-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .add-form-subtitle {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .add-form-chevron {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            flex-shrink: 0;
+            pointer-events: none; /* header handles clicks */
+        }
+
+            .add-form-chevron svg {
+                transition: transform .3s ease;
+            }
+
+        .add-form-card.open .add-form-chevron {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-dim);
+        }
+
+            .add-form-card.open .add-form-chevron svg {
+                transform: rotate(180deg);
+            }
+
+        /* ── collapsible body ── */
+        .add-form-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .38s cubic-bezier(.4,0,.2,1);
+        }
+
+        .add-form-card.open .add-form-body {
+            max-height: 720px;
+        }
+
+        .add-form-inner {
+            padding: 18px 20px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* ── image preview strip ── */
+        .af-img-preview {
+            height: 108px;
+            border-radius: 9px;
+            border: 1.5px dashed var(--border);
+            background: var(--surface2);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color .2s;
+        }
+
+        .af-img-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+            color: var(--subtle);
+            font-size: 11.5px;
+        }
+
+        .af-img-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+            .af-img-preview img.af-visible {
+                display: block;
+            }
+
+        /* ── grid layouts ── */
+        .af-g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .af-g4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ── form group ── */
+        .af-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+            .af-group label {
+                font-size: 10px;
+                font-weight: 700;
+                color: var(--muted);
+                letter-spacing: .07em;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+                .af-group label svg {
+                    color: var(--gold);
+                }
+
+        .af-req {
+            color: var(--orange);
+        }
+
+        .af-input {
+            padding: 8px 11px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text);
+            font-size: 12.5px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color .2s;
+            appearance: none;
+            width: 100%;
+        }
+
+            .af-input:focus {
+                border-color: var(--gold);
+            }
+
+            .af-input::placeholder {
+                color: var(--subtle);
+            }
+
+            .af-input option {
+                background: var(--surface2);
+            }
+
+        .af-textarea {
+            resize: vertical;
+            min-height: 64px;
+            line-height: 1.6;
+        }
+
+        /* ── section divider ── */
+        .af-divider {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── footer buttons ── */
+        .af-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 2px;
+        }
+
+        .af-btn-reset {
+            padding: 8px 15px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .15s;
+        }
+
+            .af-btn-reset:hover {
+                border-color: var(--subtle);
+                color: var(--text);
+            }
+
+        .af-btn-submit {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 7px;
+            border: none;
+            background: var(--green);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity .15s;
+        }
+
+            .af-btn-submit:hover {
+                opacity: .85;
+            }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="brand">
+            <div class="brand-icon">🚘</div>
+            <div>
+                <div class="brand-name">LUXE DRIVE</div>
+                <div class="brand-role">Admin</div>
+            </div>
+        </div>
+        <nav>
+            <a asp-controller="Admin" asp-action="Dashboard" class="@(action == "Dashboard" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                Dashboard
+            </a>
+            <a asp-controller="Admin" asp-action="Adminbookings" class="@(action == "Adminbookings" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="13" y2="16" /></svg>
+                Bookings
+            </a>
+            <a asp-controller="Admin" asp-action="AdminVehicles" class="@(action == "AdminVehicles" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /><circle cx="7" cy="14" r="1" fill="currentColor" /><circle cx="17" cy="14" r="1" fill="currentColor" /></svg>
+                Vehicles
+            </a>
+            <a asp-controller="Admin" asp-action="AdminCustomers" class="@(action == "AdminCustomers" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                Customers
+            </a>
+            <a asp-controller="Admin" asp-action="AdminProfile" class="@(action == "AdminProfile" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                Profile
+            </a>
+        </nav>
+        <div class="user-footer">
+            <div class="avatar">A</div>
+            <div>
+                <div class="user-name">Admin</div>
+                <div class="user-email">admin@luxedrive.com</div>
+            </div>
+            <button class="logout-btn" title="Logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1>Vehicle Management</h1>
+                <p>Manage your fleet of vehicles</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-filter">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
+                    Filter
+                </button>
+                {{!-- CHANGED: toggles inline form instead of opening a page/modal --}}
+                <button class="btn-add" onclick="toggleAddForm()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="addBtnIcon">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Add Vehicle
+                </button>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- ═══════════════════════════════════════════════════════
+                 ADD VEHICLE INLINE FORM  ← NEW
+                 Collapsed by default. "Add Vehicle" button or the
+                 card header row toggles it open/closed.
+                 ═══════════════════════════════════════════════════════ -->
+            <div class="add-form-card @(ViewBag.OpenAddForm == true ? "open" : "")" id="addFormCard">
+                <form asp-controller="Admin" asp-action="AddVehicle" method="post">
+                    <!-- Clickable header -->
+                    <div class="add-form-header" onclick="toggleAddForm()">
+                        <div class="add-form-header-left">
+                            <div class="add-form-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="add-form-title">Add New Vehicle</div>
+                                <div class="add-form-subtitle">Click to expand and fill in vehicle details</div>
+                            </div>
+                        </div>
+                        <div class="add-form-chevron">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible body -->
+                    <div class="add-form-body">
+                        <div class="add-form-inner">
+
+                            <!-- Image preview -->
+                            <div class="af-img-preview" id="afImgPreview">
+                                <div class="af-img-placeholder" id="afImgPlaceholder">
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <polyline points="21 15 16 10 5 21" />
+                                    </svg>
+                                    <span>Paste an image URL below to preview</span>
+                                </div>
+                                <img id="afImgEl" src="" alt="preview" />
+                            </div>
+
+                            <!-- Row 1: Name · Subtitle · Category · Price -->
+                            <div class="af-g4">
+                                <div class="af-group">
+                                    <label asp-for="Name">Vehicle Name <span class="af-req">*</span></label>
+                                    <input type="text" asp-for="Name" id="afName" class="af-input" placeholder="e.g. BMW M5" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="af-group">
+                                    <label asp-for="SubTitle">Sub Title</label>
+                                    <input type="text" asp-for="SubTitle" id="afSub" class="af-input" placeholder="e.g. Competition · 2024" />
+                                    <span asp-validation-for="SubTitle" class="text-danger"></span>
+                                </div>
+                                <div class="af-group">
+                                    <label asp-for="Category">Category</label>
+                                    <select asp-for="Category" id="afCat" class="af-input">
+                                        <option value="Luxury">🏅 Luxury</option>
+                                        <option value="Sports">⚡ Sports</option>
+                                        <option value="SUV">🚙 SUV</option>
+                                        <option value="Electric">🔋 Electric</option>
+                                    </select>
+                                    <span asp-validation-for="Category" class="text-danger"></span>
+                                </div>
+                                <div class="af-group">
+                                    <label asp-for="PriceDay">Price / Day <span class="af-req">*</span></label>
+                                    <input type="text" asp-for="PriceDay" id="afPrice" class="af-input" placeholder="e.g. ₹10,000" />
+                                    <span asp-validation-for="PriceDay" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Row 2: Image URL (full width) -->
+                            <div class="af-group">
+                                <label asp-for="ImageUrl">Image URL</label>
+                                <input type="text" asp-for="ImageUrl" id="afImg" class="af-input"
+                                       placeholder="https://images.unsplash.com/..."
+                                       oninput="afUpdatePreview()" />
+                                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            </div>
+
+                            <!-- Section label -->
+                            <div class="af-divider">Performance Specs</div>
+
+                            <!-- Row 3: Acc · Speed · HP · Mileage -->
+                            <div class="af-g4">
+                                <div class="af-group">
+                                    <label asp-for="Acc">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+                                        0–100 km/h
+                                    </label>
+                                    <input type="text" asp-for="Acc" id="afAcc" class="af-input" placeholder="e.g. 3.5s" />
+                                    <span asp-validation-for="Acc" class="text-danger"></span>
+                                </div>
+                                <div class="af-group">
+                                    <label asp-for="TopSpeed">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" /><path d="M12 6v6l4 2" /></svg>
+                                        Top Speed
+                                    </label>
+                                    <input type="text" asp-for="TopSpeed" id="afSpeed" class="af-input" placeholder="e.g. 305 km/h" />
+                                    <span asp-validation-for="TopSpeed" class="text-danger"></span>
+                                </div>
+                                <div class="af-group">
+                                    <label asp-for="Horsepower">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
+                                        Horsepower
+                                    </label>
+                                    <input type="text" asp-for="Horsepower" id="afHp" class="af-input" placeholder="e.g. 600 HP" />
+                                    <span asp-validation-for="Horsepower" class="text-danger"></span>
+                                </div>
+                                <div class="af-group">
+                                    <label asp-for="Mileage">Mileage</label>
+                                    <input type="text" asp-for="Mileage" id="afMileage" class="af-input" placeholder="e.g. 12 km/l" />
+                                    <span asp-validation-for="Mileage" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Row 4: Description -->
+                            <div class="af-group">
+                                <label asp-for="Description">Description</label>
+                                <textarea asp-for="Description" id="afDesc" class="af-input af-textarea"
+                                          placeholder="Tell customers about this vehicle — performance, comfort, features..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="af-footer">
+                                <button type="button" class="af-btn-reset" onclick="afReset()">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 .49-4.95" /></svg>
+                                    Reset
+                                </button>
+                                <button type="submit" class="af-btn-submit">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                                    Add Vehicle
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- ═══════════════ END ADD VEHICLE FORM ═══════════════ -->
+            <!-- Search bar (unchanged) -->
+            <div class="search-wrap">
+                <span class="search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                </span>
+                <input class="search-input" type="text" placeholder="Search vehicles..." />
+            </div>
+
+            <!-- Vehicle table (unchanged) -->
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>VEHICLE</th>
+                            <th>CATEGORY</th>
+                            <th>SPECS</th>
+                            <th>PRICE / DAY</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicleTableBody">
+
+                        <!-- Row 1 — BMW M5 -->
+                        <tr>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=120&q=70&fit=crop" alt="BMW M5" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">BMW M5</div>
+                                        <div class="vehicle-sub">Competition · 2024 Model</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="cat-badge cat-luxury">Luxury</span></td>
+                            <td>
+                                <div class="specs-cell">
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>3.5s</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" /><path d="M12 6v6l4 2" /></svg>305 km/h</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>600 HP</span>
+                                </div>
+                            </td>
+                            <td><span class="price-val">₹10,000</span></td>
+                            <td>
+                                <div class="status-wrap">
+                                    <button class="badge badge-available" onclick="toggleStatus(event, this)">Available<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
+                                    <div class="status-dropdown">
+                                        <div class="dropdown-label">Change Status</div>
+                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
+                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
+                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="viewVehicle('BMW M5','Luxury','Competition · 2024 Model','₹10,000','3.5s','305 km/h','600 HP','12 km/l','https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80&fit=crop','The BMW M5 Competition is the pinnacle of performance sedans, combining jaw-dropping speed with everyday refinement.')">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <button class="action-btn" title="Edit" onclick="editVehicle(this)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                    </button>
+                                    <button class="action-btn danger" title="Delete" onclick="deleteRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Row 2 — Audi R8 -->
+                        <tr>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=120&q=70&fit=crop" alt="Audi R8" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">Audi R8</div>
+                                        <div class="vehicle-sub">V10 Plus · 2024 Model</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="cat-badge cat-sports">Sports</span></td>
+                            <td>
+                                <div class="specs-cell">
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>3.2s</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" /><path d="M12 6v6l4 2" /></svg>330 km/h</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>620 HP</span>
+                                </div>
+                            </td>
+                            <td><span class="price-val">₹20,000</span></td>
+                            <td>
+                                <div class="status-wrap">
+                                    <button class="badge badge-available" onclick="toggleStatus(event, this)">Available<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
+                                    <div class="status-dropdown">
+                                        <div class="dropdown-label">Change Status</div>
+                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
+                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
+                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="viewVehicle('Audi R8','Sports','V10 Plus · 2024 Model','₹20,000','3.2s','330 km/h','620 HP','8 km/l','https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80&fit=crop','The Audi R8 V10 Plus is a mid-engine supercar delivering an unmatched naturally-aspirated V10 experience with quattro all-wheel drive.')">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <button class="action-btn" title="Edit" onclick="editVehicle(this)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                    </button>
+                                    <button class="action-btn danger" title="Delete" onclick="deleteRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Row 3 — Mercedes-Benz S-Class -->
+                        <tr>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=120&q=70&fit=crop" alt="Mercedes-Benz S-Class" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">Mercedes-Benz S-Class</div>
+                                        <div class="vehicle-sub">AMG Line · 2024 Model</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="cat-badge cat-luxury">Luxury</span></td>
+                            <td>
+                                <div class="specs-cell">
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>4.9s</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" /><path d="M12 6v6l4 2" /></svg>250 km/h</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>435 HP</span>
+                                </div>
+                            </td>
+                            <td><span class="price-val">₹15,000</span></td>
+                            <td>
+                                <div class="status-wrap">
+                                    <button class="badge badge-rented" onclick="toggleStatus(event, this)">Rented<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
+                                    <div class="status-dropdown">
+                                        <div class="dropdown-label">Change Status</div>
+                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
+                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
+                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="viewVehicle('Mercedes-Benz S-Class','Luxury','AMG Line · 2024 Model','₹15,000','4.9s','250 km/h','435 HP','10 km/l','https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&q=80&fit=crop','The Mercedes-Benz S-Class AMG Line is the ultimate expression of luxury motoring with air suspension and handcrafted interior.')">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <button class="action-btn" title="Edit" onclick="editVehicle(this)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                    </button>
+                                    <button class="action-btn danger" title="Delete" onclick="deleteRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Row 4 — Porsche 911 -->
+                        <tr>
+                            <td>
+                                <div class="vehicle-cell">
+                                    <div class="vehicle-thumb">
+                                        <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=120&q=70&fit=crop" alt="Porsche 911 Carrera" />
+                                    </div>
+                                    <div>
+                                        <div class="vehicle-name">Porsche 911 Carrera</div>
+                                        <div class="vehicle-sub">S Coupe · 2024 Model</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="cat-badge cat-sports">Sports</span></td>
+                            <td>
+                                <div class="specs-cell">
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>3.7s</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" /><path d="M12 6v6l4 2" /></svg>308 km/h</span>
+                                    <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>450 HP</span>
+                                </div>
+                            </td>
+                            <td><span class="price-val">₹18,000</span></td>
+                            <td>
+                                <div class="status-wrap">
+                                    <button class="badge badge-maintenance" onclick="toggleStatus(event, this)">Maintenance<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
+                                    <div class="status-dropdown">
+                                        <div class="dropdown-label">Change Status</div>
+                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
+                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
+                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="viewVehicle('Porsche 911 Carrera','Sports','S Coupe · 2024 Model','₹18,000','3.7s','308 km/h','450 HP','11 km/l','https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=800&q=80&fit=crop','The Porsche 911 Carrera S is an icon reimagined for the modern era with its rear-engine layout and flat-six soundtrack.')">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    </button>
+                                    <button class="action-btn" title="Edit" onclick="editVehicle(this)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                    </button>
+                                    <button class="action-btn danger" title="Delete" onclick="deleteRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- ── VIEW MODAL (unchanged) ── -->
+    <div class="modal-overlay" id="viewModal" onclick="closeViewModal(event)">
+        <div class="modal view-modal">
+            <button class="modal-close" onclick="closeViewModalBtn()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            </button>
+            <div class="view-modal-body">
+                <div class="view-image-wrap">
+                    <img id="vmImg" src="" alt="" />
+                    <span class="view-cat-badge" id="vmCat"></span>
+                </div>
+                <div class="view-details">
+                    <div class="view-meta" id="vmMeta"></div>
+                    <div class="view-name-row">
+                        <h2 id="vmName"></h2>
+                        <span class="view-price" id="vmPrice"></span>
+                    </div>
+                    <div class="view-specs-row" id="vmSpecs"></div>
+                    <div class="view-divider"></div>
+                    <div class="view-section-title">About This Car</div>
+                    <p class="view-desc" id="vmDesc"></p>
+                    <div class="view-actions">
+                        <button class="btn-rent">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 12 12 5 19 12" /><line x1="12" y1="5" x2="12" y2="19" /></svg>
+                            Rent Now
+                        </button>
+                        <button class="btn-back-modal" onclick="closeViewModalBtn()">← Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── EDIT MODAL (unchanged) ── -->
+    <div class="modal-overlay @(ViewBag.OpenEditModal == true ? "open" : "")" id="editModal" onclick="closeEditModal(event)">
+        <div class="modal edit-modal">
+            <form asp-controller="Admin" asp-action="EditVehicle" method="post">
+                <div class="edit-modal-header">
+                    <h3 id="editModalTitle">Edit Vehicle</h3>
+                    <button type="button" class="modal-close" onclick="closeEditModalBtn()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                    </button>
+                </div>
+                <div class="edit-modal-body">
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label asp-for="Name">Vehicle Name</label>
+                            <input type="text" asp-for="Name" id="fName" class="form-input" placeholder="e.g. BMW M5" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SubTitle">Sub Title</label>
+                            <input type="text" asp-for="SubTitle" id="fSub" class="form-input" placeholder="e.g. Competition · 2024 Model" />
+                            <span asp-validation-for="SubTitle" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label asp-for="Category">Category</label>
+                            <select asp-for="Category" id="fCat" class="form-input">
+                                <option value="Luxury">Luxury</option>
+                                <option value="Sports">Sports</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Electric">Electric</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PriceDay">Price / Day</label>
+                            <input type="text" asp-for="PriceDay" id="fPrice" class="form-input" placeholder="e.g. ₹10,000" />
+                            <span asp-validation-for="PriceDay" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label asp-for="Acc">0–100 km/h</label>
+                            <input type="text" asp-for="Acc" id="fAcc" class="form-input" placeholder="e.g. 3.5s" />
+                            <span asp-validation-for="Acc" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TopSpeed">Top Speed</label>
+                            <input type="text" asp-for="TopSpeed" id="fSpeed" class="form-input" placeholder="e.g. 305 km/h" />
+                            <span asp-validation-for="TopSpeed" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Horsepower">Horsepower</label>
+                            <input type="text" asp-for="Horsepower" id="fHp" class="form-input" placeholder="e.g. 600 HP" />
+                            <span asp-validation-for="Horsepower" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label asp-for="Mileage">Mileage</label>
+                            <input type="text" asp-for="Mileage" id="fMileage" class="form-input" placeholder="e.g. 12 km/l" />
+                            <span asp-validation-for="Mileage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ImageUrl">Image URL</label>
+                            <input type="text" asp-for="ImageUrl" id="fImg" class="form-input" placeholder="https://..." />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description">Description</label>
+                        <textarea asp-for="Description" id="fDesc" class="form-input form-textarea" placeholder="About this car..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="edit-modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeEditModalBtn()">Cancel</button>
+                    <button type="submit" class="btn-save">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let editingRow = null;
+
+        /* ══════════════════════════════════════
+           ADD VEHICLE INLINE FORM
+           ══════════════════════════════════════ */
+
+        // Toggle the collapsible add-form card open/closed
+        function toggleAddForm() {
+            const card = document.getElementById('addFormCard');
+            card.classList.toggle('open');
+            if (card.classList.contains('open')) {
+                setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+            }
+        }
+
+        // Live image preview
+        function afUpdatePreview() {
+            const url = document.getElementById('afImg').value.trim();
+            const imgEl = document.getElementById('afImgEl');
+            const placeholder = document.getElementById('afImgPlaceholder');
+            if (url) {
+                imgEl.src = url;
+                imgEl.classList.add('af-visible');
+                placeholder.style.display = 'none';
+            } else {
+                imgEl.classList.remove('af-visible');
+                placeholder.style.display = 'flex';
+            }
+        }
+
+        // Reset all add-form fields
+        function afReset() {
+            ['afName','afSub','afPrice','afAcc','afSpeed','afHp','afMileage','afImg','afDesc']
+                .forEach(id => document.getElementById(id).value = '');
+            document.getElementById('afCat').value = 'Luxury';
+            afUpdatePreview();
+        }
+
+        // Highlight a field with an error colour
+        function afHighlight(id, msg) {
+            const el = document.getElementById(id);
+            el.style.borderColor = 'var(--orange)';
+            el.placeholder = msg;
+            el.focus();
+            setTimeout(() => { el.style.borderColor = ''; }, 2200);
+        }
+
+        // Submit the add form → append a new table row
+        function afSubmit() {
+            const name    = document.getElementById('afName').value.trim();
+            const sub     = document.getElementById('afSub').value.trim();
+            const cat     = document.getElementById('afCat').value;
+            const price   = document.getElementById('afPrice').value.trim();
+            const acc     = document.getElementById('afAcc').value.trim();
+            const speed   = document.getElementById('afSpeed').value.trim();
+            const hp      = document.getElementById('afHp').value.trim();
+            const mileage = document.getElementById('afMileage').value.trim();
+            const img     = document.getElementById('afImg').value.trim();
+            const desc    = document.getElementById('afDesc').value.trim();
+
+            if (!name)  { afHighlight('afName',  'Vehicle name is required');  return; }
+            if (!price) { afHighlight('afPrice', 'Price is required'); return; }
+
+            const fallback = 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=120&q=70&fit=crop';
+            const catClass = 'cat-' + cat.toLowerCase();
+
+            const tbody = document.getElementById('vehicleTableBody');
+            const tr = document.createElement('tr');
+            tr.style.animation = 'rowIn .4s ease both';
+
+            tr.innerHTML = `
+                <td>
+                    <div class="vehicle-cell">
+                        <div class="vehicle-thumb">
+                            <img src="${img || fallback}" alt="${name}" />
+                        </div>
+                        <div>
+                            <div class="vehicle-name">${name}</div>
+                            <div class="vehicle-sub">${sub || '—'}</div>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="cat-badge ${catClass}">${cat}</span></td>
+                <td>
+                    <div class="specs-cell">
+                        <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${acc || '—'}</span>
+                        <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg>${speed || '—'}</span>
+                        <span class="spec-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>${hp || '—'}</span>
+                    </div>
+                </td>
+                <td><span class="price-val">${price}</span></td>
+                <td>
+                    <div class="status-wrap">
+                        <button class="badge badge-available" onclick="toggleStatus(event, this)">
+                            Available
+                            <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="status-dropdown">
+                            <div class="dropdown-label">Change Status</div>
+                            <button class="dropdown-item item-available"   onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
+                            <button class="dropdown-item item-rented"      onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
+                            <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="action-btn" title="View"
+                            onclick="viewVehicle('${name}','${cat}','${sub}','${price}','${acc || '—'}','${speed || '—'}','${hp || '—'}','${mileage || '—'}','${img || fallback}','${desc}')">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" title="Edit" onclick="editVehicle(this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button class="action-btn danger" title="Delete" onclick="deleteRow(this)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                        </button>
+                    </div>
+                </td>`;
+
+            tbody.appendChild(tr);
+
+            // Brief gold flash on new row
+            setTimeout(() => {
+                tr.style.transition = 'background .4s ease';
+                tr.style.background = 'rgba(201,168,76,0.1)';
+                setTimeout(() => { tr.style.background = ''; }, 900);
+            }, 100);
+
+            // Scroll new row into view
+            setTimeout(() => tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 200);
+
+            // Reset + collapse form
+            afReset();
+            document.getElementById('addFormCard').classList.remove('open');
+        }
+
+        /* ══════════════════════════════════════
+           STATUS DROPDOWN
+           ══════════════════════════════════════ */
+        function toggleStatus(e, badge) {
+            e.stopPropagation();
+            const wrap = badge.closest('.status-wrap');
+            const isOpen = wrap.classList.contains('open');
+            closeAllDropdowns();
+            if (!isOpen) {
+                const rect = badge.getBoundingClientRect();
+                const dd = wrap.querySelector('.status-dropdown');
+                dd.style.top  = (rect.bottom + 6) + 'px';
+                dd.style.left = rect.left + 'px';
+                if (rect.left + 172 > window.innerWidth - 8)
+                    dd.style.left = (window.innerWidth - 172 - 8) + 'px';
+                wrap.classList.add('open');
+            }
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.status-wrap.open').forEach(w => w.classList.remove('open'));
+        }
+
+        function setStatus(btn, label, badgeClass) {
+            const e = window.event; if (e) e.stopPropagation();
+            const wrap    = btn.closest('.status-wrap');
+            const badge   = wrap.querySelector('.badge');
+            const chevron = badge.querySelector('.badge-chevron');
+            badge.textContent = label + ' ';
+            badge.appendChild(chevron);
+            badge.className = 'badge ' + badgeClass + ' badge-flash';
+            badge.setAttribute('onclick', 'toggleStatus(event, this)');
+            setTimeout(() => badge.classList.remove('badge-flash'), 500);
+            wrap.classList.remove('open');
+        }
+
+        document.addEventListener('click', closeAllDropdowns);
+        document.querySelector('.content').addEventListener('scroll', closeAllDropdowns);
+
+        /* ══════════════════════════════════════
+           VIEW MODAL
+           ══════════════════════════════════════ */
+        function viewVehicle(name, cat, sub, price, acc, speed, hp, mileage, img, desc) {
+            document.getElementById('vmName').textContent  = name;
+            document.getElementById('vmPrice').textContent = price + ' / day';
+            document.getElementById('vmCat').textContent   = cat;
+            document.getElementById('vmCat').className     = 'view-cat-badge cat-' + cat.toLowerCase();
+            document.getElementById('vmImg').src           = img;
+            document.getElementById('vmMeta').textContent  = sub;
+            document.getElementById('vmDesc').textContent  = desc;
+            document.getElementById('vmSpecs').innerHTML   =
+                `<div class="vs-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>${acc}</span><small>0–100 km/h</small></div>
+                 <div class="vs-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg><span>${speed}</span><small>Top Speed</small></div>
+                 <div class="vs-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg><span>${hp}</span><small>Horsepower</small></div>
+                 <div class="vs-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4"/><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg><span>${mileage}</span><small>Mileage</small></div>`;
+            document.getElementById('viewModal').classList.add('open');
+        }
+
+        function closeViewModal(e)   { if (e.target === e.currentTarget) closeViewModalBtn(); }
+        function closeViewModalBtn() { document.getElementById('viewModal').classList.remove('open'); }
+
+        /* ══════════════════════════════════════
+           EDIT MODAL
+           ══════════════════════════════════════ */
+        function editVehicle(btn) {
+            editingRow = btn.closest('tr');
+            document.getElementById('editModalTitle').textContent = 'Edit Vehicle';
+
+            const name    = editingRow.querySelector('.vehicle-name').textContent;
+            const sub     = editingRow.querySelector('.vehicle-sub').textContent;
+            const price   = editingRow.querySelector('.price-val').textContent;
+            const specs   = editingRow.querySelectorAll('.spec-item');
+            const catText = editingRow.querySelector('.cat-badge').textContent.trim();
+            const imgSrc  = editingRow.querySelector('.vehicle-thumb img').src;
+
+            document.getElementById('fName').value    = name;
+            document.getElementById('fSub').value     = sub;
+            document.getElementById('fPrice').value   = price;
+            document.getElementById('fCat').value     = catText;
+            document.getElementById('fImg').value     = imgSrc;
+            document.getElementById('fMileage').value = '';
+            document.getElementById('fDesc').value    = '';
+
+            if (specs[0]) document.getElementById('fAcc').value   = specs[0].textContent.trim();
+            if (specs[1]) document.getElementById('fSpeed').value = specs[1].textContent.trim();
+            if (specs[2]) document.getElementById('fHp').value    = specs[2].textContent.trim();
+
+            document.getElementById('editModal').classList.add('open');
+        }
+
+        function saveVehicle() {
+            const name  = document.getElementById('fName').value.trim();
+            const sub   = document.getElementById('fSub').value.trim();
+            const cat   = document.getElementById('fCat').value;
+            const price = document.getElementById('fPrice').value.trim();
+            const acc   = document.getElementById('fAcc').value.trim();
+            const speed = document.getElementById('fSpeed').value.trim();
+            const hp    = document.getElementById('fHp').value.trim();
+            const img   = document.getElementById('fImg').value.trim();
+
+            if (!name || !price) { alert('Vehicle name and price are required.'); return; }
+            if (!editingRow) return;
+
+            const catClass = 'cat-' + cat.toLowerCase();
+            editingRow.querySelector('.vehicle-name').textContent = name;
+            editingRow.querySelector('.vehicle-sub').textContent  = sub;
+            editingRow.querySelector('.price-val').textContent    = price;
+            const catBadge = editingRow.querySelector('.cat-badge');
+            catBadge.textContent = cat;
+            catBadge.className   = 'cat-badge ' + catClass;
+            if (img) editingRow.querySelector('.vehicle-thumb img').src = img;
+            const specs = editingRow.querySelectorAll('.spec-item');
+            if (specs[0] && acc)   specs[0].lastChild.textContent = acc;
+            if (specs[1] && speed) specs[1].lastChild.textContent = speed;
+            if (specs[2] && hp)    specs[2].lastChild.textContent = hp;
+
+            closeEditModalBtn();
+            editingRow.style.transition = 'background .3s ease';
+            editingRow.style.background = 'rgba(201,168,76,0.08)';
+            setTimeout(() => { editingRow.style.background = ''; }, 800);
+            editingRow = null;
+        }
+
+        function closeEditModal(e)   { if (e.target === e.currentTarget) closeEditModalBtn(); }
+        function closeEditModalBtn() { document.getElementById('editModal').classList.remove('open'); }
+
+        /* ══════════════════════════════════════
+           DELETE & SEARCH
+           ══════════════════════════════════════ */
+        function deleteRow(btn) {
+            const tr = btn.closest('tr');
+            tr.style.transition = 'opacity .3s ease, transform .3s ease';
+            tr.style.opacity = '0';
+            tr.style.transform = 'translateX(20px)';
+            setTimeout(() => tr.remove(), 300);
+        }
+
+        document.querySelector('.search-input').addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('tbody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>

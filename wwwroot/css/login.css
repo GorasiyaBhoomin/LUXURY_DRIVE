@@ -28,47 +28,47 @@ body {
     margin-bottom: 24px;
 }
 
-    .login-header h2 {
-        color: #f0c14b;
-        margin: 0 0 8px 0;
-        font-size: 24px;
-        font-weight: 600;
-    }
+.login-header h2 {
+    color: #f0c14b;
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
 
-    .login-header p {
-        color: #888888;
-        margin: 0;
-        font-size: 13px;
-    }
+.login-header p {
+    color: #888888;
+    margin: 0;
+    font-size: 13px;
+}
 
 .form-group {
     margin-bottom: 20px;
 }
 
-    .form-group label {
-        display: block;
-        color: #b0b0b0;
-        margin-bottom: 8px;
-        font-size: 13px;
-        font-weight: 500;
-    }
+.form-group label {
+    display: block;
+    color: #b0b0b0;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
 
-    .form-group input {
-        width: 100%;
-        padding: 12px 14px;
-        background-color: #0d0d0d;
-        border: 1px solid #292929;
-        border-radius: 6px;
-        color: #ffffff;
-        font-size: 14px;
-        transition: border-color 0.2s;
-        font-family: 'Inter', sans-serif;
-    }
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    background-color: #0d0d0d;
+    border: 1px solid #292929;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: border-color 0.2s;
+    font-family: 'Inter', sans-serif;
+}
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #f0c14b;
-        }
+.form-group input:focus {
+    outline: none;
+    border-color: #f0c14b;
+}
 
 .btn-submit {
     width: 100%;
@@ -86,9 +86,9 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-    .btn-submit:hover {
-        background-color: #d6ab41;
-    }
+.btn-submit:hover {
+    background-color: #d6ab41;
+}
 
 .signup-link-container {
     text-align: center;
@@ -103,6 +103,51 @@ body {
     margin-left: 4px;
 }
 
-    .signup-link:hover {
-        text-decoration: underline;
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+/* Validation Errors */
+.text-danger {
+    color: #ff4444;
+    /* Red color for error text */
+    font-size: 13px;
+    /* Slightly smaller font for error messages */
+    margin-top: 6px;
+    display: block;
+    animation: shake 0.4s ease-in-out;
+    /* Applying the shake animation */
+}
+
+/* ASP.NET Tag helper applies this class to invalid input fields */
+.input-validation-error {
+    border-color: #ff4444 !important;
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Keyframes for shake animation */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
     }
+
+    20% {
+        transform: translateX(-4px);
+    }
+
+    40% {
+        transform: translateX(4px);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    80% {
+        transform: translateX(4px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}

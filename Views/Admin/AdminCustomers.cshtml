@@ -1,0 +1,362 @@
+﻿@{
+    Layout = null;
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    ViewData["Title"] = "AdminCustomers";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Drive – Customers</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/AdminCustomers.css" asp-append-version="true" />
+</head>
+<body>
+
+    <aside>
+        <div class="brand">
+            <div class="brand-icon">🚘</div>
+            <div>
+                <div class="brand-name">LUXE DRIVE</div>
+                <div class="brand-role">Admin</div>
+            </div>
+        </div>
+        <nav>
+            <a asp-controller="Admin" asp-action="Dashboard" class="@(action == "Dashboard" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                Dashboard
+            </a>
+            <a asp-controller="Admin" asp-action="Adminbookings" class="@(action == "Adminbookings" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="13" y2="16" /></svg>
+                Bookings
+            </a>
+            <a asp-controller="Admin" asp-action="AdminVehicles" class="@(action == "AdminVehicles" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /><circle cx="7" cy="14" r="1" fill="currentColor" /><circle cx="17" cy="14" r="1" fill="currentColor" /></svg>
+                Vehicles
+            </a>
+            <a asp-controller="Admin" asp-action="AdminCustomers" class="@(action == "AdminCustomers" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                Customers
+            </a>
+            <a asp-controller="Admin" asp-action="AdminProfile" class="@(action == "AdminProfile" ? "active" : "")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                Profile
+            </a>
+        </nav>
+        <div class="user-footer">
+            <div class="avatar">A</div>
+            <div>
+                <div class="user-name">Admin</div>
+                <div class="user-email">admin@luxedrive.com</div>
+            </div>
+            <button class="logout-btn" title="Logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1>Customers</h1>
+                <p>View all registered customers</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-filter">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
+                    Filter
+                </button>
+                <button class="btn-export">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                    Export
+                </button>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- ── Stats ── -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon s-blue">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                    </div>
+                    <div><div class="stat-num">8</div><div class="stat-lbl">Total Customers</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon s-green">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    </div>
+                    <div><div class="stat-num">6</div><div class="stat-lbl">Active</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon s-gold">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /></svg>
+                    </div>
+                    <div><div class="stat-num">21</div><div class="stat-lbl">Total Bookings</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon s-purple">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                    </div>
+                    <div><div class="stat-num">₹3.2L</div><div class="stat-lbl">Total Revenue</div></div>
+                </div>
+            </div>
+
+            <!-- ── Search ── -->
+            <div class="search-wrap">
+                <span class="search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                </span>
+                <input class="search-input" type="text" placeholder="Search by name, email or phone..." />
+            </div>
+
+            <!-- ── Table ── -->
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CUSTOMER</th>
+                            <th>CONTACT</th>
+                            <th>JOINED</th>
+                            <th>BOOKINGS</th>
+                            <th>TOTAL SPENT</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#3b82f6">MC</div><div><div class="cust-name">Michael Chen</div><div class="cust-id">#CUST-001</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">michael.chen@gmail.com</span><span class="c-phone">+91 98765 43210</span></div></td>
+                            <td><span class="date-val">12 Jan 2024</span></td>
+                            <td><span class="trip-num">5</span> <span class="trip-lbl">trips</span></td>
+                            <td><span class="spent-val">₹42,500</span></td>
+                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Michael Chen','#CUST-001','michael.chen@gmail.com','+91 98765 43210','12 Jan 2024','5','₹42,500','Active','MC','#3b82f6','BMW M5, Audi R8, Porsche 911')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#a855f7">SJ</div><div><div class="cust-name">Sarah Johnson</div><div class="cust-id">#CUST-002</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">sarah.j@outlook.com</span><span class="c-phone">+91 91234 56789</span></div></td>
+                            <td><span class="date-val">28 Jan 2024</span></td>
+                            <td><span class="trip-num">3</span> <span class="trip-lbl">trips</span></td>
+                            <td><span class="spent-val">₹27,000</span></td>
+                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Sarah Johnson','#CUST-002','sarah.j@outlook.com','+91 91234 56789','28 Jan 2024','3','₹27,000','Active','SJ','#a855f7','Porsche 911, Mercedes S-Class')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#2db568">JW</div><div><div class="cust-name">James Williams</div><div class="cust-id">#CUST-003</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">james.w@gmail.com</span><span class="c-phone">+91 87654 32109</span></div></td>
+                            <td><span class="date-val">03 Feb 2024</span></td>
+                            <td><span class="trip-num">4</span> <span class="trip-lbl">trips</span></td>
+                            <td><span class="spent-val">₹61,200</span></td>
+                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('James Williams','#CUST-003','james.w@gmail.com','+91 87654 32109','03 Feb 2024','4','₹61,200','Active','JW','#2db568','BMW X7, Audi R8, Tesla Model S')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#c9a84c">PS</div><div><div class="cust-name">Priya Sharma</div><div class="cust-id">#CUST-004</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">priya.sharma@yahoo.com</span><span class="c-phone">+91 99887 76655</span></div></td>
+                            <td><span class="date-val">17 Feb 2024</span></td>
+                            <td><span class="trip-num">2</span> <span class="trip-lbl">trips</span></td>
+                            <td><span class="spent-val">₹18,300</span></td>
+                            <td><span class="status-pill pill-inactive"><span class="sdot"></span>Inactive</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Priya Sharma','#CUST-004','priya.sharma@yahoo.com','+91 99887 76655','17 Feb 2024','2','₹18,300','Inactive','PS','#c9a84c','Tesla Model S, BMW M5')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#e05c2e">RK</div><div><div class="cust-name">Rahul Kapoor</div><div class="cust-id">#CUST-005</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">rahul.kapoor@gmail.com</span><span class="c-phone">+91 77665 54433</span></div></td>
+                            <td><span class="date-val">05 Mar 2024</span></td>
+                            <td><span class="trip-num">3</span> <span class="trip-lbl">trips</span></td>
+                            <td><span class="spent-val">₹35,750</span></td>
+                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Rahul Kapoor','#CUST-005','rahul.kapoor@gmail.com','+91 77665 54433','05 Mar 2024','3','₹35,750','Active','RK','#e05c2e','Porsche 911, Audi R8')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#06b6d4">AM</div><div><div class="cust-name">Ananya Mehta</div><div class="cust-id">#CUST-006</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">ananya.m@hotmail.com</span><span class="c-phone">+91 88990 01122</span></div></td>
+                            <td><span class="date-val">19 Mar 2024</span></td>
+                            <td><span class="trip-num">1</span> <span class="trip-lbl">trip</span></td>
+                            <td><span class="spent-val">₹12,000</span></td>
+                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Ananya Mehta','#CUST-006','ananya.m@hotmail.com','+91 88990 01122','19 Mar 2024','1','₹12,000','Active','AM','#06b6d4','Mercedes S-Class')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#64748b">VP</div><div><div class="cust-name">Vikram Patel</div><div class="cust-id">#CUST-007</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">vikram.patel@gmail.com</span><span class="c-phone">+91 70011 22334</span></div></td>
+                            <td><span class="date-val">02 Apr 2024</span></td>
+                            <td><span class="trip-num">2</span> <span class="trip-lbl">trips</span></td>
+                            <td><span class="spent-val">₹29,400</span></td>
+                            <td><span class="status-pill pill-inactive"><span class="sdot"></span>Inactive</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Vikram Patel','#CUST-007','vikram.patel@gmail.com','+91 70011 22334','02 Apr 2024','2','₹29,400','Inactive','VP','#64748b','BMW M5, Porsche 911')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="cust-cell"><div class="cust-av" style="background:#f59e0b">NR</div><div><div class="cust-name">Neha Rao</div><div class="cust-id">#CUST-008</div></div></div></td>
+                            <td><div class="contact-cell"><span class="c-email">neha.rao@rediffmail.com</span><span class="c-phone">+91 93322 11445</span></div></td>
+                            <td><span class="date-val">14 Apr 2024</span></td>
+                            <td><span class="trip-num">1</span> <span class="trip-lbl">trip</span></td>
+                            <td><span class="spent-val">₹8,500</span></td>
+                            <td><span class="status-pill pill-new"><span class="sdot"></span>New</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="action-btn" title="View" onclick="openDetail('Neha Rao','#CUST-008','neha.rao@rediffmail.com','+91 93322 11445','14 Apr 2024','1','₹8,500','New','NR','#f59e0b','Audi R8')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- ── CUSTOMER DETAIL MODAL ── -->
+    <div class="modal-overlay" id="detailModal" onclick="overlayClose(event)">
+        <div class="modal detail-modal">
+            <button class="modal-close" onclick="closeDetail()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            </button>
+            <div class="dm-band" id="dmBand">
+                <div class="dm-av-large" id="dmAv"></div>
+            </div>
+            <div class="dm-body">
+                <div class="dm-top">
+                    <div>
+                        <h2 class="dm-name" id="dmName"></h2>
+                        <span class="dm-cid" id="dmId"></span>
+                    </div>
+                    <span class="status-pill" id="dmStatus"></span>
+                </div>
+                <div class="dm-info-grid">
+                    <div class="dm-info-row">
+                        <div class="dm-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></div>
+                        <div><div class="dm-lbl">Email</div><div class="dm-val" id="dmEmail"></div></div>
+                    </div>
+                    <div class="dm-info-row">
+                        <div class="dm-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 21.73 16.92z" /></svg></div>
+                        <div><div class="dm-lbl">Phone</div><div class="dm-val" id="dmPhone"></div></div>
+                    </div>
+                    <div class="dm-info-row">
+                        <div class="dm-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg></div>
+                        <div><div class="dm-lbl">Member Since</div><div class="dm-val" id="dmJoined"></div></div>
+                    </div>
+                    <div class="dm-info-row">
+                        <div class="dm-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /></svg></div>
+                        <div><div class="dm-lbl">Vehicles Rented</div><div class="dm-val" id="dmVehicles"></div></div>
+                    </div>
+                </div>
+                <div class="dm-stats">
+                    <div class="dm-stat"><div class="dm-stat-num" id="dmBookings"></div><div class="dm-stat-lbl">Bookings</div></div>
+                    <div class="dm-sep"></div>
+                    <div class="dm-stat"><div class="dm-stat-num gold" id="dmSpent"></div><div class="dm-stat-lbl">Total Spent</div></div>
+                    <div class="dm-sep"></div>
+                    <div class="dm-stat"><div class="dm-stat-num green">★ 4.8</div><div class="dm-stat-lbl">Avg Rating</div></div>
+                </div>
+                <div class="dm-actions">
+                    <button class="dm-btn-email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>Send Email</button>
+                    <button class="dm-btn-bk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /></svg>View Bookings</button>
+                    <button class="dm-btn-close" onclick="closeDetail()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDetail(name, id, email, phone, joined, bookings, spent, status, initials, color, vehicles) {
+            document.getElementById('dmName').textContent     = name;
+            document.getElementById('dmId').textContent       = id;
+            document.getElementById('dmEmail').textContent    = email;
+            document.getElementById('dmPhone').textContent    = phone;
+            document.getElementById('dmJoined').textContent   = joined;
+            document.getElementById('dmBookings').textContent = bookings;
+            document.getElementById('dmSpent').textContent    = spent;
+            document.getElementById('dmVehicles').textContent = vehicles;
+
+            const av = document.getElementById('dmAv');
+            av.textContent = initials;
+            av.style.background = color;
+
+            document.getElementById('dmBand').style.background =
+                'linear-gradient(135deg,' + color + '28 0%,transparent 70%)';
+
+            const st = document.getElementById('dmStatus');
+            st.innerHTML = '<span class="sdot"></span>' + status;
+            st.className = 'status-pill pill-' + status.toLowerCase();
+
+            document.getElementById('detailModal').classList.add('open');
+        }
+
+        function overlayClose(e) { if (e.target === e.currentTarget) closeDetail(); }
+        function closeDetail()   { document.getElementById('detailModal').classList.remove('open'); }
+
+        function removeRow(btn) {
+            const tr = btn.closest('tr');
+            tr.style.transition = 'opacity .3s, transform .3s';
+            tr.style.opacity = '0';
+            tr.style.transform = 'translateX(20px)';
+            setTimeout(() => tr.remove(), 300);
+        }
+
+        document.querySelector('.search-input').addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('tbody tr').forEach(r => {
+                r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>

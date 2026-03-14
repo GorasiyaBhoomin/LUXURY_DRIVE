@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LUXURY_DRIVE.Models.RegisterViewModel
+@{
     Layout = null;
     ViewData["Title"] = "Register";
 }
@@ -13,20 +14,25 @@
     </div>
 
     <form asp-controller="Authentication" asp-action="Register" method="post">
+        
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
-            <label>Name</label>
-            <input type="text" name="name" required />
+            <label asp-for="Name">Name</label>
+            <input type="text" asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email" required />
+            <label asp-for="Email">Email</label>
+            <input type="email" asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" required />
+            <label asp-for="Password">Password</label>
+            <input type="password" asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn-submit">Register</button>
@@ -41,3 +47,7 @@
     </form>
 
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

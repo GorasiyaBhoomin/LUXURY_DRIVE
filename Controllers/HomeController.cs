@@ -6,9 +6,11 @@ namespace LUXURY_DRIVE.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        // ── CHANGED: accepts optional ContactViewModel so validation errors
+        //             survive the round-trip when SubmitContact returns View("Index", model)
+        public IActionResult Index(ContactViewModel model = null)
         {
-            return View();
+            return View(model ?? new ContactViewModel());
         }
 
         public IActionResult Car_view()
@@ -56,10 +58,8 @@ namespace LUXURY_DRIVE.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Returns the form again with validation errors shown
                 return View("Car_rent", model);
             }
-
             // TODO: Save booking to database here
             return RedirectToAction("Index");
         }
@@ -73,7 +73,6 @@ namespace LUXURY_DRIVE.Controllers
                 ViewBag.ShowContactError = true;
                 return View("Index", model);
             }
-
             // TODO: Send email / save to db
             return RedirectToAction("Index");
         }

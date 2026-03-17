@@ -1,7 +1,6 @@
 @model LUXURY_DRIVE.Models.ContactViewModel
 @{
     Layout = null;
-
     ViewData["Title"] = "Home Page";
 }
 <!DOCTYPE html>
@@ -13,6 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 
+    <%-- ── CHANGED: jQuery + validation scripts moved to <head> so that       --%>
+    <%-- unobtrusive validation is ready before any form HTML is parsed.        --%>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 </head>
 <body>
 
@@ -72,7 +75,10 @@
         <div class="search-bar reveal">
             <div class="search-input-wrap">
                 <span class="search-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
                 </span>
                 <input type="text" class="search-input" placeholder="Search by brand or model..." id="searchInput" oninput="filterCars()">
             </div>
@@ -104,11 +110,19 @@
                     <div class="car-name">BMW M5</div>
                     <div class="car-specs">
                         <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
                             4 Seats
                         </div>
                         <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                            </svg>
                             Automatic
                         </div>
                     </div>
@@ -130,8 +144,20 @@
                 <div class="car-info">
                     <div class="car-name">Audi R8</div>
                     <div class="car-specs">
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>2 Seats</div>
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                            </svg>
+                            2 Seats
+                        </div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
+                            </svg>
+                            Automatic
+                        </div>
                     </div>
                     <div class="car-footer">
                         <div class="car-price">₹20,000 <span>/day</span></div>
@@ -151,8 +177,22 @@
                 <div class="car-info">
                     <div class="car-name">Range Rover Velar</div>
                     <div class="car-specs">
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>5 Seats</div>
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            5 Seats
+                        </div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
+                            </svg>
+                            Automatic
+                        </div>
                     </div>
                     <div class="car-footer">
                         <div class="car-price">₹15,000 <span>/day</span></div>
@@ -172,8 +212,22 @@
                 <div class="car-info">
                     <div class="car-name">Mercedes S-Class</div>
                     <div class="car-specs">
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>5 Seats</div>
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            5 Seats
+                        </div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
+                            </svg>
+                            Automatic
+                        </div>
                     </div>
                     <div class="car-footer">
                         <div class="car-price">₹12,000 <span>/day</span></div>
@@ -193,8 +247,22 @@
                 <div class="car-info">
                     <div class="car-name">Tesla Model S</div>
                     <div class="car-specs">
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>5 Seats</div>
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            5 Seats
+                        </div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
+                            </svg>
+                            Automatic
+                        </div>
                     </div>
                     <div class="car-footer">
                         <div class="car-price">₹13,000 <span>/day</span></div>
@@ -214,8 +282,20 @@
                 <div class="car-info">
                     <div class="car-name">Lamborghini Huracan</div>
                     <div class="car-specs">
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>2 Seats</div>
-                        <div class="car-spec"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" /></svg>Automatic</div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                            </svg>
+                            2 Seats
+                        </div>
+                        <div class="car-spec">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
+                            </svg>
+                            Automatic
+                        </div>
                     </div>
                     <div class="car-footer">
                         <div class="car-price">₹30,000 <span>/day</span></div>
@@ -358,24 +438,35 @@
                     </div>
                 </div>
             </div>
-            <form class="contact-form reveal" asp-controller="Home" asp-action="SubmitContact" method="post">
+
+            <%-- ── CHANGED: form uses asp-controller / asp-action / method="post" --%>
+            <form class="contact-form reveal"
+                  asp-controller="Home"
+                  asp-action="SubmitContact"
+                  method="post">
+
                 @Html.AntiForgeryToken()
+
                 <div class="form-group">
                     <label>Name</label>
-                    <input asp-for="Name" class="form-input" placeholder="Your full name">
+                    <input asp-for="Name" class="form-input" placeholder="Your full name" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
                     <label>Email</label>
-                    <input asp-for="Email" class="form-input" placeholder="your@email.com">
+                    <input asp-for="Email" class="form-input" placeholder="your@email.com" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
                     <label>Message</label>
                     <textarea asp-for="Message" class="form-textarea" placeholder="How can we help you?"></textarea>
                     <span asp-validation-for="Message" class="text-danger"></span>
                 </div>
-                <button type="submit" class="btn-gold" id="contactSubmitBtn">Send Message</button>
+
+                <button type="submit" class="btn-gold">Send Message</button>
+
             </form>
         </div>
     </section>
@@ -416,11 +507,11 @@
         const dots   = document.querySelectorAll('.hero-dot');
 
         function goSlide(n) {
-          slides[slide].classList.remove('active');
-          dots[slide].classList.remove('active');
-          slide = n;
-          slides[slide].classList.add('active');
-          dots[slide].classList.add('active');
+            slides[slide].classList.remove('active');
+            dots[slide].classList.remove('active');
+            slide = n;
+            slides[slide].classList.add('active');
+            dots[slide].classList.add('active');
         }
 
         setInterval(() => goSlide((slide + 1) % slides.length), 5000);
@@ -428,66 +519,43 @@
         // ── SCROLL REVEAL ──
         const revealEls = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
-          entries.forEach((e, i) => {
-            if (e.isIntersecting) {
-              setTimeout(() => e.target.classList.add('visible'), i * 80);
-              observer.unobserve(e.target);
-            }
-          });
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    setTimeout(() => e.target.classList.add('visible'), i * 80);
+                    observer.unobserve(e.target);
+                }
+            });
         }, { threshold: 0.12 });
         revealEls.forEach(el => observer.observe(el));
 
         // ── CAR FILTER ──
         function filterCars() {
-          const query = document.getElementById('searchInput').value.toLowerCase();
-          const type  = document.getElementById('typeFilter').value;
-          document.querySelectorAll('.car-card').forEach(card => {
-            const name = card.dataset.name.toLowerCase();
-            const t    = card.dataset.type;
-            const show = name.includes(query) && (!type || t === type);
-            card.style.display = show ? '' : 'none';
-          });
-        }
-
-        // ── FORM SUBMIT ──
-        function submitForm() {
-          const btn = event.target;
-          btn.textContent = '✓ Message Sent!';
-          btn.style.background = '#16a34a';
-          setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; }, 3000);
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const type  = document.getElementById('typeFilter').value;
+            document.querySelectorAll('.car-card').forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const t    = card.dataset.type;
+                const show = name.includes(query) && (!type || t === type);
+                card.style.display = show ? '' : 'none';
+            });
         }
 
         // ── STICKY NAV SHADOW ──
         window.addEventListener('scroll', () => {
-          document.querySelector('nav').style.boxShadow =
-            window.scrollY > 60 ? '0 4px 30px rgba(0,0,0,0.6)' : 'none';
+            document.querySelector('nav').style.boxShadow =
+                window.scrollY > 60 ? '0 4px 30px rgba(0,0,0,0.6)' : 'none';
         });
 
-        // ── AUTO SCROLL ON VALIDATION ERROR ──
-        @if (ViewBag.ShowContactError == true) {
+        // ── CHANGED: Auto-scroll to contact section when server-side
+        //             validation fails and returns the page with errors ──
+        @if (ViewBag.ShowContactError == true)
+        {
             <text>
             document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
             });
             </text>
         }
-    </script>
-    
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('.contact-form');
-            if (!form) return;
-            if (window.$ && $.validator && $.validator.unobtrusive) {
-                $.validator.unobtrusive.parse(form);
-            }
-            form.addEventListener('submit', function (e) {
-                if (window.$ && $(form).length && !$(form).valid()) {
-                    e.preventDefault();
-                }
-            });
-        });
     </script>
 
 </body>

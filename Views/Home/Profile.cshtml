@@ -1,5 +1,5 @@
-﻿@{
-    // Layout = null;
+@{
+    Layout = null;
 
     ViewData["Title"] = "Profile";
 }
@@ -122,83 +122,94 @@
 
 
                 <!-- PERSONAL DETAILS -->
-                <div class="tab-panel active" id="panel-personal">
-
-                    <div class="panel-title">
-                        Personal Information
-                    </div>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" class="form-input">
+                <div class="tab-panel @((string)ViewBag.ActiveTab == "personal" || ViewBag.ActiveTab == null ? "active" : "")" id="panel-personal">
+                    <form asp-controller="Home" asp-action="UpdateProfile" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="panel-title">
+                            Personal Information
                         </div>
 
-                        <div class="form-group">
-                            <label>Username</label>
-                            <input type="text" class="form-input">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" name="FullName" class="form-input"
+                                       data-val="true" data-val-required="Full Name is required.">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="FullName" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" name="Username" class="form-input"
+                                       data-val="true" data-val-required="Username is required.">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="Email" class="form-input"
+                                       data-val="true" data-val-required="Email is required."
+                                       data-val-email="Invalid email format.">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" name="PhoneNumber" class="form-input"
+                                       data-val="true" data-val-required="Phone Number is required.">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="PhoneNumber" data-valmsg-replace="true"></span>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-input">
+                        <div class="form-actions">
+                            <button type="submit" class="btn-gold">
+                                Save Changes
+                            </button>
+                            <button type="reset" class="btn-outline-gold">
+                                Reset
+                            </button>
                         </div>
-
-                        <div class="form-group">
-                            <label>Phone</label>
-                            <input type="tel" class="form-input">
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <button class="btn-gold">
-                            Save Changes
-                        </button>
-
-                        <button class="btn-outline-gold">
-                            Reset
-                        </button>
-
-                    </div>
-
+                    </form>
                 </div>
 
-
                 <!-- PASSWORD TAB -->
-                <div class="tab-panel" id="panel-password">
-
-                    <div class="panel-title">
-                        Change Password
-                    </div>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label>Current Password</label>
-                            <input type="password" class="form-input">
+                <div class="tab-panel @((string)ViewBag.ActiveTab == "password" ? "active" : "")" id="panel-password">
+                    <form asp-controller="Home" asp-action="UpdatePassword" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="panel-title">
+                            Change Password
                         </div>
 
-                        <div class="form-group">
-                            <label>New Password</label>
-                            <input type="password" class="form-input">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" name="CurrentPassword" class="form-input"
+                                       data-val="true" data-val-required="Current password is required.">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="CurrentPassword" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" name="NewPassword" class="form-input"
+                                       data-val="true" data-val-required="New password is required."
+                                       data-val-length="Password must be at least 6 characters." data-val-length-min="6" data-val-length-max="100">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" name="ConfirmPassword" class="form-input"
+                                       data-val="true" data-val-required="Please confirm your new password."
+                                       data-val-equalto="Passwords do not match." data-val-equalto-other="*.NewPassword">
+                                <span class="field-validation-valid text-danger" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Confirm Password</label>
-                            <input type="password" class="form-input">
+                        <div class="form-actions">
+                            <button type="submit" class="btn-gold">
+                                Update Password
+                            </button>
                         </div>
-
-                    </div>
-
-                    <div class="form-actions">
-                        <button class="btn-gold">
-                            Update Password
-                        </button>
-                    </div>
-
+                    </form>
                 </div>
 
 
@@ -247,12 +258,13 @@
         }
 
         function logOut(){
-
             window.location.href = "/Authentication/Login"
-
         }
 
     </script>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 </body>
 </html>

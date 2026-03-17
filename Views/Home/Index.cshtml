@@ -1,4 +1,5 @@
-﻿@{
+@model LUXURY_DRIVE.Models.ContactViewModel
+@{
     Layout = null;
 
     ViewData["Title"] = "Home Page";
@@ -357,21 +358,25 @@
                     </div>
                 </div>
             </div>
-            <div class="contact-form reveal">
+            <form class="contact-form reveal" asp-controller="Home" asp-action="SubmitContact" method="post">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" class="form-input" placeholder="Your full name">
+                    <input asp-for="Name" class="form-input" placeholder="Your full name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" class="form-input" placeholder="your@email.com">
+                    <input asp-for="Email" class="form-input" placeholder="your@email.com">
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label>Message</label>
-                    <textarea class="form-textarea" placeholder="How can we help you?"></textarea>
+                    <textarea asp-for="Message" class="form-textarea" placeholder="How can we help you?"></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
                 </div>
-                <button class="btn-gold" onclick="submitForm()">Send Message</button>
-            </div>
+                <button type="submit" class="btn-gold" id="contactSubmitBtn">Send Message</button>
+            </form>
         </div>
     </section>
 
@@ -457,6 +462,19 @@
           document.querySelector('nav').style.boxShadow =
             window.scrollY > 60 ? '0 4px 30px rgba(0,0,0,0.6)' : 'none';
         });
+
+        // ── AUTO SCROLL ON VALIDATION ERROR ──
+        @if (ViewBag.ShowContactError == true) {
+            <text>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            });
+            </text>
+        }
     </script>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 </body>
 </html>

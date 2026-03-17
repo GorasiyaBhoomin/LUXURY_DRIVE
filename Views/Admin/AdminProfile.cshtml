@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = null;
     var action = ViewContext.RouteData.Values["action"]?.ToString();
     ViewData["Title"] = "AdminProfile";
@@ -380,9 +380,8 @@
         }
     </script>
     
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 </body>
 </html>

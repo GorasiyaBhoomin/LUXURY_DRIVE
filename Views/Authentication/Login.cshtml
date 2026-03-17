@@ -1,4 +1,4 @@
-﻿@model LUXURY_DRIVE.Models.LoginViewModel
+@model LUXURY_DRIVE.Models.LoginViewModel
 @{
     Layout = null;
     ViewData["Title"] = "Login";
@@ -47,6 +47,4 @@
     </form>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --bg: #0a0a0a;
     --surface: #111111;
     --card: #141414;
@@ -865,6 +865,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .step-line {
         max-width: 40px;
     }
+}
+
+/* ── FORM VALIDATION ── */
+.text-danger {
+    color: var(--red, #ef4444);
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+    animation: shake 0.4s ease-in-out;
+}
+
+.input-validation-error {
+    border-color: var(--red, #ef4444) !important;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
 }
 
 

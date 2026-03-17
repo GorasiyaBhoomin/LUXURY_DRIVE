@@ -1,3 +1,4 @@
+@model LUXURY_DRIVE.Models.AdminProfileViewModel
 @{
     Layout = null;
     var action = ViewContext.RouteData.Values["action"]?.ToString();
@@ -159,24 +160,24 @@
 
                         <div class="card-body">
                             <div class="form-group">
-                                <label asp-for="CurrentPassword">Current Password</label>
+                                <label>Current Password</label>
                                 <div class="pw-wrap">
-                                    <input type="password" asp-for="CurrentPassword" class="form-input" placeholder="Enter current password" id="pwCurrent" />
+                                    <input type="password" name="CurrentPassword" class="form-input" placeholder="Enter current password" id="pwCurrent" />
                                     <button class="pw-toggle" onclick="togglePw('pwCurrent', this)" type="button">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
-                                <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="CurrentPassword" data-valmsg-replace="true"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="NewPassword">New Password</label>
+                                <label>New Password</label>
                                 <div class="pw-wrap">
-                                    <input type="password" asp-for="NewPassword" class="form-input" placeholder="Enter new password" oninput="checkStrength()" id="pwNew" />
+                                    <input type="password" name="NewPassword" class="form-input" placeholder="Enter new password" oninput="checkStrength()" id="pwNew" />
                                     <button class="pw-toggle" onclick="togglePw('pwNew', this)" type="button">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
-                                <span asp-validation-for="NewPassword" class="text-danger"></span>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
                                 <!-- Strength bar -->
                                 <div class="strength-bar" id="strengthBar">
                                     <div class="strength-fill" id="strengthFill"></div>
@@ -184,14 +185,14 @@
                                 <div class="strength-label" id="strengthLabel"></div>
                             </div>
                             <div class="form-group">
-                                <label asp-for="ConfirmPassword">Confirm New Password</label>
+                                <label>Confirm New Password</label>
                                 <div class="pw-wrap">
-                                    <input type="password" asp-for="ConfirmPassword" class="form-input" placeholder="Re-enter new password" id="pwConfirm" />
+                                    <input type="password" name="ConfirmPassword" class="form-input" placeholder="Re-enter new password" id="pwConfirm" />
                                     <button class="pw-toggle" onclick="togglePw('pwConfirm', this)" type="button">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
                             </div>
                         </div>
 

@@ -122,7 +122,8 @@
 
 
                 <!-- PERSONAL DETAILS -->
-                <div class="tab-panel @((string)ViewBag.ActiveTab == "personal" || ViewBag.ActiveTab == null ? "active" : "")" id="panel-personal">
+@{ string activeTab = (string)ViewBag.ActiveTab; }
+                <div class="tab-panel @(activeTab == "personal" || activeTab == null ? "active" : "")" id="panel-personal">
                     <form asp-controller="Home" asp-action="UpdateProfile" method="post">
                         @Html.AntiForgeryToken()
                         <div class="panel-title">
@@ -172,7 +173,7 @@
                 </div>
 
                 <!-- PASSWORD TAB -->
-                <div class="tab-panel @((string)ViewBag.ActiveTab == "password" ? "active" : "")" id="panel-password">
+                <div class="tab-panel @(activeTab == "password" ? "active" : "")" id="panel-password">
                     <form asp-controller="Home" asp-action="UpdatePassword" method="post">
                         @Html.AntiForgeryToken()
                         <div class="panel-title">

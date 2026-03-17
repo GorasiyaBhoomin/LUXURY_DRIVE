@@ -3,6 +3,8 @@
     Layout = null;
     var action = ViewContext.RouteData.Values["action"]?.ToString();
     ViewData["Title"] = "AdminVehicles";
+    bool openAddForm = ViewBag.OpenAddForm == true;
+    bool openEditModal = ViewBag.OpenEditModal == true;
 }
 
 <!DOCTYPE html>
@@ -324,8 +326,12 @@
                 <div class="user-name">Admin</div>
                 <div class="user-email">admin@luxedrive.com</div>
             </div>
-            <button class="logout-btn" title="Logout">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+            <button onclick="window.location.href='/Authentication/Login'" class="logout-btn" title="Logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
             </button>
         </div>
     </aside>
@@ -341,7 +347,6 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                     Filter
                 </button>
-                {{!-- CHANGED: toggles inline form instead of opening a page/modal --}}
                 <button class="btn-add" onclick="toggleAddForm()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="addBtnIcon">
                         <line x1="12" y1="5" x2="12" y2="19" />
@@ -359,7 +364,7 @@
                  Collapsed by default. "Add Vehicle" button or the
                  card header row toggles it open/closed.
                  ═══════════════════════════════════════════════════════ -->
-            <div class="add-form-card @(ViewBag.OpenAddForm == true ? "open" : "")" id="addFormCard">
+            <div class="add-form-card @(openAddForm ? "open" : "")" id="addFormCard">
                 <form asp-controller="Admin" asp-action="AddVehicle" method="post">
                     <!-- Clickable header -->
                     <div class="add-form-header" onclick="toggleAddForm()">
@@ -745,7 +750,7 @@
     </div>
 
     <!-- ── EDIT MODAL (unchanged) ── -->
-    <div class="modal-overlay @(ViewBag.OpenEditModal == true ? "open" : "")" id="editModal" onclick="closeEditModal(event)">
+    <div class="modal-overlay @(openEditModal ? "open" : "")" id="editModal" onclick="closeEditModal(event)">
         <div class="modal edit-modal">
             <form asp-controller="Admin" asp-action="EditVehicle" method="post">
                 <div class="edit-modal-header">

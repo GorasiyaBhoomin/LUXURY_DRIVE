@@ -1,251 +1,256 @@
 @model LUXURY_DRIVE.Models.CarRentViewModel
 @{
+    Layout = null;
     ViewData["Title"] = "Car Rent";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Styles {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewData["Title"] - LUXE DRIVE</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/css/carrent.css" asp-append-version="true" />
-}
 
-<style>
-    /* NAVBAR OVERRIDE FOR THIS PAGE */
-    nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 18px 40px;
-        background: #000;
-        border-bottom: 1px solid #333;
-    }
+    <style>
 
-    .nav-logo {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        text-decoration: none;
-    }
+        /* NAVBAR */
 
-    .logo-icon {
-        width: 48px;
-        height: 48px;
-        border: 2px solid #d4af37;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .shield {
-        width: 16px;
-        height: 20px;
-        border: 2px solid #d4af37;
-        border-radius: 6px 6px 10px 10px;
-    }
-
-    .logo-title {
-        font-size: 20px;
-        font-weight: 600;
-        letter-spacing: 2px;
-        color: #d4af37;
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    .logo-sub {
-        font-size: 12px;
-        color: #cfcfcf;
-        letter-spacing: 1px;
-        margin-top: 2px;
-    }
-
-    .nav-back {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #d4af37;
-        cursor: pointer;
-        font-size: 14px;
-        font-family: 'Montserrat', sans-serif;
-        transition: 0.3s;
-    }
-
-        .nav-back:hover {
-            color: #fff;
-            transform: translateX(-3px);
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 40px;
+            background: #000;
+            border-bottom: 1px solid #333;
         }
-</style>
 
-<!-- NAVBAR -->
-<nav>
-    <a asp-controller="Home" asp-action="Index" class="nav-logo">
-        <div class="logo-icon">
-            <div class="shield"></div>
-        </div>
-        <div>
-            <div class="logo-title">LUXE DRIVE</div>
-            <div class="logo-sub">Premium Rentals</div>
-        </div>
-    </a>
+        /* LOGO */
 
-    <span class="nav-back" onclick="history.back()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6" />
-        </svg>
-        Back
-    </span>
-</nav>
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
 
-<!-- MAIN BOOKING FORM -->
-<form class="book-wrap" asp-controller="Home" asp-action="SubmitRent"
-      method="post" asp-antiforgery="true">
+        /* ICON BOX */
 
-    @Html.AntiForgeryToken()
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    <!-- Global validation summary -->
-    <div asp-validation-summary="ModelOnly"
-         style="color:#ef4444; padding:0.5rem 1rem; font-size:0.85rem;"></div>
+        /* SHIELD ICON */
 
-    <!-- ═══ LEFT: FORM COLUMN ═══ -->
-    <div class="book-form-col">
+        .shield {
+            width: 16px;
+            height: 20px;
+            border: 2px solid #d4af37;
+            border-radius: 6px 6px 10px 10px;
+        }
 
-        <!-- PERSONAL INFO -->
-        <div class="form-section">
-            <div class="form-section-title">Personal Information</div>
+        /* LOGO TEXT */
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">First Name *</label>
-                    <input asp-for="FirstName" class="form-input" placeholder="John" />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #d4af37;
+            font-family: 'Montserrat',sans-serif;
+        }
 
-                <div class="form-group">
-                    <label class="form-label">Last Name *</label>
-                    <input asp-for="LastName" class="form-input" placeholder="Doe" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
-            </div>
+        .logo-sub {
+            font-size: 12px;
+            color: #cfcfcf;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Email *</label>
-                    <input asp-for="Email" class="form-input" placeholder="john@example.com" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #d4af37;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Montserrat',sans-serif;
+            transition: 0.3s;
+        }
 
-                <div class="form-group">
-                    <label class="form-label">Phone *</label>
-                    <input asp-for="Phone" class="form-input" placeholder="+91 99999 99999" />
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Driving License Number *</label>
-                    <input asp-for="LicenseNumber" class="form-input" placeholder="DL-1234567890" />
-                    <span asp-validation-for="LicenseNumber" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">License Expiry Date *</label>
-                    <input asp-for="LicenseExpiryDate" type="date" class="form-input" />
-                    <span asp-validation-for="LicenseExpiryDate" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- RENTAL DETAILS -->
-        <div class="form-section">
-            <div class="form-section-title">Rental Details</div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Pickup Date *</label>
-                    <input asp-for="PickupDate" type="date" class="form-input" />
-                    <span asp-validation-for="PickupDate" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Pickup Time *</label>
-                    <select asp-for="PickupTime" class="form-select">
-                        <option value="">Select time...</option>
-                        <option value="09:00 AM">09:00 AM</option>
-                        <option value="10:00 AM">10:00 AM</option>
-                        <option value="11:00 AM">11:00 AM</option>
-                        <option value="12:00 PM">12:00 PM</option>
-                        <option value="02:00 PM">02:00 PM</option>
-                        <option value="04:00 PM">04:00 PM</option>
-                    </select>
-                    <span asp-validation-for="PickupTime" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Number of Days *</label>
-                    <input asp-for="NumberOfDays" type="number"
-                           class="form-input" min="1" max="30" placeholder="1" />
-                    <span asp-validation-for="NumberOfDays" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- ═══ RIGHT: SUMMARY COLUMN ═══ -->
-    <div class="book-summary-col">
-        <div class="summary-card">
-            <img class="summary-car-img"
-                 src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80"
-                 alt="BMW M5" />
-
-            <div class="summary-body">
-                <div class="summary-car-name">BMW M5</div>
-                <div class="summary-car-type">Luxury</div>
-
-                <div class="summary-line">
-                    <span>Price / Day</span>
-                    <span>₹10,000</span>
-                </div>
-                <div class="summary-line">
-                    <span>Days</span>
-                    <span>1</span>
-                </div>
-                <div class="summary-total-block">
-                    <span>Total</span>
-                    <span>₹10,000</span>
-                </div>
-            </div>
-
-            <div class="btn-confirm-wrap">
-                <button type="submit" class="btn-confirm">
-                    Confirm Booking →
-                </button>
-            </div>
-        </div>
-    </div>
-
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('form.book-wrap');
-            if (!form) return;
-            if (window.$ && $.validator && $.validator.unobtrusive) {
-                $.validator.unobtrusive.parse(form);
+            .nav-back:hover {
+                color: #fff;
+                transform: translateX(-3px);
             }
-            form.addEventListener('submit', function (e) {
-                if (window.$ && $(form).length && !$(form).valid()) {
-                    e.preventDefault();
-                }
-            });
-        });
-    </script>
-}
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR WITH LOGO -->
+
+    <nav>
+
+        <a asp-controller="Home" asp-action="Index" class="nav-logo">
+
+            <div class="logo-icon">
+                <div class="shield"></div>
+            </div>
+
+            <div>
+                <div class="logo-title">LUXE DRIVE</div>
+                <div class="logo-sub">Premium Rentals</div>
+            </div>
+
+        </a>
+
+        <span class="nav-back" onclick="history.back()">
+
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+
+                <polyline points="15 18 9 12 15 6" />
+
+            </svg>
+
+            Back
+
+        </span>
+
+    </nav>
+
+
+    <form class="book-wrap" asp-controller="Home" asp-action="SubmitRent" method="post">
+
+        <!-- LEFT FORM -->
+        <div class="book-form-col">
+
+            <!-- PERSONAL INFO -->
+            <div class="form-section">
+                <div class="form-section-title"> Personal Information</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input asp-for="FirstName" class="form-input">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input asp-for="LastName" class="form-input">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input asp-for="Email" class="form-input">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone *</label>
+                        <input asp-for="Phone" class="form-input">
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Driving License Number *</label>
+                        <input asp-for="LicenseNumber" class="form-input">
+                        <span asp-validation-for="LicenseNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>License Expiry Date</label>
+                        <input asp-for="LicenseExpiryDate" type="date" class="form-input">
+                        <span asp-validation-for="LicenseExpiryDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RENTAL DETAILS -->
+            <div class="form-section">
+                <div class="form-section-title"> Rental Details</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pickup Date *</label>
+                        <input asp-for="PickupDate" type="date" class="form-input">
+                        <span asp-validation-for="PickupDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pickup Time</label>
+                        <select asp-for="PickupTime" class="form-select">
+                            <option value="">Select time...</option>
+                            <option value="09:00 AM">09:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="02:00 PM">02:00 PM</option>
+                            <option value="04:00 PM">04:00 PM</option>
+                        </select>
+                        <span asp-validation-for="PickupTime" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Number of Days</label>
+                        <input asp-for="NumberOfDays" class="form-input" value="1">
+                        <span asp-validation-for="NumberOfDays" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SUMMARY -->
+        <div class="book-summary-col">
+            <div class="summary-card">
+                <img class="summary-car-img" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80">
+                <div class="summary-body">
+                    <div class="summary-car-name">BMW M5</div>
+                    <div class="summary-car-type">Luxury</div>
+                    <div class="summary-line">
+                        <span>Price / Day</span>
+                        <span>₹10,000</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Days</span>
+                        <span>1</span>
+                    </div>
+                    <div class="summary-total-block">
+                        <span>Total</span>
+                        <span>₹10,000</span>
+                    </div>
+                </div>
+
+                <div class="btn-confirm-wrap">
+                    <button type="submit" class="btn-confirm">
+                        Confirm Booking →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+</body>
+</html>

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LUXURY_DRIVE.Controllers
@@ -15,6 +14,7 @@ namespace LUXURY_DRIVE.Controllers
         {
             return View();
         }
+
         public IActionResult AdminVehicles()
         {
             return View();
@@ -26,7 +26,6 @@ namespace LUXURY_DRIVE.Controllers
         {
             if (ModelState.IsValid)
             {
-                // In a real database, add the vehicle here
                 return RedirectToAction("AdminVehicles");
             }
             ViewBag.OpenAddForm = true;
@@ -39,60 +38,38 @@ namespace LUXURY_DRIVE.Controllers
         {
             if (ModelState.IsValid)
             {
-                // In a real database, update the vehicle here
                 return RedirectToAction("AdminVehicles");
             }
             ViewBag.OpenEditModal = true;
             return View("AdminVehicles", model);
         }
-        //public IActionResult ViewAdminVehicles()
-        //{
-        //    return View();
-        //}
-        //public IActionResult AddAdminVehicles()
-        //{
-        //    return View();
-        //}
-        //public IActionResult EditAdminVehicles()
-        //{
-        //    return View();
-        //}
 
         public IActionResult AdminCustomers()
         {
             return View();
         }
 
-
         public IActionResult AdminProfile()
         {
-            return View();
+            return View(new Models.AdminProfilePageViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateProfile(Models.AdminProfileViewModel model)
+        public IActionResult UpdateProfile(Models.AdminProfileViewModel profile)
         {
             if (ModelState.IsValid)
-            {
-                // Logic to update profile in database
                 return RedirectToAction("AdminProfile");
-            }
-            // If invalid, re-render the profile page
-            return View("AdminProfile", model);
+            return View("AdminProfile", new Models.AdminProfilePageViewModel { Profile = profile });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdatePassword(Models.AdminChangePasswordViewModel model)
+        public IActionResult UpdatePassword(Models.AdminChangePasswordViewModel password)
         {
             if (ModelState.IsValid)
-            {
-                // Logic to update password in database
                 return RedirectToAction("AdminProfile");
-            }
-            // If invalid, re-render the profile page
-            return View("AdminProfile", model);
+            return View("AdminProfile", new Models.AdminProfilePageViewModel { Password = password });
         }
     }
 }

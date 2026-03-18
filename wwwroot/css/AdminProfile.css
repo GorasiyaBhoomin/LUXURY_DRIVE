@@ -170,14 +170,16 @@ main {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-width: 0;
 }
 
 header {
-    padding: 22px 28px;
+    padding: 18px 28px;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    flex-shrink: 0;
 }
 
 header h1 {
@@ -195,11 +197,13 @@ header p {
 /* ── CONTENT ── */
 .content {
     flex: 1;
-    padding: 24px 28px;
+    padding: 20px 28px 28px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 18px;
+    /* Ensure content starts from top without clipping */
+    overflow-x: hidden;
 }
 
 /* ── PROFILE BANNER ── */
@@ -207,29 +211,54 @@ header p {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
-    overflow: hidden;
+    overflow: visible; /* KEY FIX: was 'hidden', which clipped the avatar on scroll */
     animation: fadeUp .4s ease both;
+    position: relative;
+    /* Reserve space so the avatar overlap doesn't get cropped */
+    margin-top: 4px;
+}
+
+/* Inner wrapper handles the overflow clipping for the bg only */
+.banner-inner {
+    border-radius: 14px;
+    overflow: hidden;
     position: relative;
 }
 
 .banner-bg {
-    height: 80px;
-    background: linear-gradient(135deg, rgba(201, 168, 76, .18) 0%, rgba(201, 168, 76, .04) 50%, transparent 100%);
+    height: 90px;
+    background: linear-gradient(135deg,
+        rgba(201, 168, 76, .22) 0%,
+        rgba(201, 168, 76, .06) 50%,
+        transparent 100%);
     border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+/* Gold shimmer stripe */
+.banner-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,.4), transparent);
 }
 
 .banner-body {
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 0 24px 22px;
+    padding: 0 24px 20px;
+    /* No overflow:hidden here so avatar peeks above bg cleanly */
 }
 
 .banner-avatar {
-    width: 70px;
-    height: 70px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
-    background: var(--gold);
+    background: linear-gradient(135deg, var(--gold), #a87c2a);
     color: #1a1a1a;
     font-size: 26px;
     font-weight: 800;
@@ -237,26 +266,36 @@ header p {
     align-items: center;
     justify-content: center;
     border: 3px solid var(--surface);
-    margin-top: -35px;
+    margin-top: -36px; /* Pull avatar up into the banner bg */
     flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,.4);
     transition: all .2s;
+    position: relative;
+    z-index: 2;
 }
 
 .banner-info {
     flex: 1;
-    padding-top: 8px;
+    padding-top: 10px;
+    min-width: 0;
 }
 
 .banner-name {
     font-size: 17px;
     font-weight: 800;
     color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .banner-email {
     font-size: 12px;
     color: var(--muted);
     margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .banner-role {
@@ -268,6 +307,7 @@ header p {
     color: var(--gold);
     font-size: 11px;
     font-weight: 700;
+    letter-spacing: .04em;
 }
 
 .banner-stats {
@@ -278,7 +318,8 @@ header p {
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 12px 20px;
-    margin-top: 8px;
+    margin-top: 10px;
+    flex-shrink: 0;
 }
 
 .bstat {
@@ -287,7 +328,7 @@ header p {
 }
 
 .bstat-num {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: #fff;
 }
@@ -296,11 +337,13 @@ header p {
     font-size: 10px;
     color: var(--muted);
     margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
 }
 
 .bstat-div {
     width: 1px;
-    height: 30px;
+    height: 32px;
     background: var(--border);
 }
 
@@ -322,32 +365,14 @@ header p {
     animation: fadeUp .4s ease both;
 }
 
-.settings-card:nth-child(1) {
-    animation-delay: .05s;
-}
-
-.settings-card:nth-child(2) {
-    animation-delay: .10s;
-}
-
-.settings-card:nth-child(3) {
-    animation-delay: .15s;
-}
-
-.settings-card:nth-child(4) {
-    animation-delay: .20s;
-}
+.settings-card:nth-child(1) { animation-delay: .05s; }
+.settings-card:nth-child(2) { animation-delay: .10s; }
+.settings-card:nth-child(3) { animation-delay: .15s; }
+.settings-card:nth-child(4) { animation-delay: .20s; }
 
 @keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: none;
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
 }
 
 .card-header {
@@ -370,20 +395,9 @@ header p {
     flex-shrink: 0;
 }
 
-.card-icon-orange {
-    background: rgba(224, 92, 46, .12);
-    color: var(--orange);
-}
-
-.card-icon-blue {
-    background: rgba(59, 130, 246, .12);
-    color: var(--blue);
-}
-
-.card-icon-red {
-    background: rgba(239, 68, 68, .12);
-    color: var(--red);
-}
+.card-icon-orange { background: rgba(224, 92, 46, .12); color: var(--orange); }
+.card-icon-blue   { background: rgba(59, 130, 246, .12); color: var(--blue); }
+.card-icon-red    { background: rgba(239, 68, 68, .12);  color: var(--red); }
 
 .card-title {
     font-size: 14px;
@@ -437,11 +451,13 @@ header p {
     font-size: 13px;
     font-family: inherit;
     outline: none;
-    transition: border-color .2s;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
 }
 
 .form-input:focus {
     border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, .08);
 }
 
 .form-input:disabled {
@@ -477,9 +493,7 @@ header p {
     transition: color .15s;
 }
 
-.pw-toggle:hover {
-    color: var(--gold);
-}
+.pw-toggle:hover { color: var(--gold); }
 
 /* strength bar */
 .strength-bar {
@@ -518,12 +532,11 @@ header p {
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
-    transition: opacity .15s;
+    transition: opacity .15s, transform .1s;
 }
 
-.btn-save:hover {
-    opacity: .85;
-}
+.btn-save:hover    { opacity: .85; transform: translateY(-1px); }
+.btn-save:active   { transform: translateY(0); }
 
 .btn-update {
     display: inline-flex;
@@ -538,25 +551,19 @@ header p {
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
-    transition: opacity .15s;
+    transition: opacity .15s, transform .1s;
 }
 
-.btn-update:hover {
-    opacity: .85;
-}
+.btn-update:hover  { opacity: .85; transform: translateY(-1px); }
+.btn-update:active { transform: translateY(0); }
 
 .save-msg {
     font-size: 12px;
     font-weight: 600;
 }
 
-.msg-ok {
-    color: var(--green);
-}
-
-.msg-err {
-    color: var(--orange);
-}
+.msg-ok  { color: var(--green); }
+.msg-err { color: var(--orange); }
 
 /* ── NOTIFICATION TOGGLES ── */
 .notif-body {
@@ -574,13 +581,8 @@ header p {
     transition: background .15s;
 }
 
-.toggle-row:last-child {
-    border-bottom: none;
-}
-
-.toggle-row:hover {
-    background: rgba(255, 255, 255, .02);
-}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-row:hover      { background: rgba(255, 255, 255, .02); }
 
 .toggle-title {
     font-size: 13px;
@@ -630,22 +632,12 @@ header p {
     box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
 }
 
-.toggle-switch input:checked+.toggle-knob {
-    background: var(--gold);
-}
-
-.toggle-switch input:checked+.toggle-knob::before {
-    transform: translateX(18px);
-}
+.toggle-switch input:checked + .toggle-knob            { background: var(--gold); }
+.toggle-switch input:checked + .toggle-knob::before    { transform: translateX(18px); }
 
 /* ── DANGER ZONE ── */
-.danger-card {
-    border-color: rgba(239, 68, 68, .2);
-}
-
-.danger-card .card-header {
-    border-color: rgba(239, 68, 68, .15);
-}
+.danger-card { border-color: rgba(239, 68, 68, .2); }
+.danger-card .card-header { border-color: rgba(239, 68, 68, .15); }
 
 .danger-row {
     display: flex;
@@ -705,23 +697,12 @@ header p {
     transition: all .15s;
 }
 
-.btn-danger-fill:hover {
-    background: rgba(239, 68, 68, .22);
-}
+.btn-danger-fill:hover { background: rgba(239, 68, 68, .22); }
 
-/* scrollbar */
-.content::-webkit-scrollbar {
-    width: 5px;
-}
-
-.content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.content::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 3px;
-}
+/* ── SCROLLBAR ── */
+.content::-webkit-scrollbar       { width: 5px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
 /* ── FORM VALIDATION ── */
 .text-danger {
@@ -739,27 +720,10 @@ header p {
 }
 
 @keyframes shake {
-    0% {
-        transform: translateX(0);
-    }
-
-    20% {
-        transform: translateX(-4px);
-    }
-
-    40% {
-        transform: translateX(4px);
-    }
-
-    60% {
-        transform: translateX(-4px);
-    }
-
-    80% {
-        transform: translateX(4px);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(-4px); }
+    40%  { transform: translateX(4px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+    100% { transform: translateX(0); }
 }

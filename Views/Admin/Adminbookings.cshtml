@@ -131,13 +131,6 @@
                                         Confirmed
                                         <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                                     </button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
-                                        <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
-                                        <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
-                                        <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -179,13 +172,6 @@
                                         Pending
                                         <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                                     </button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
-                                        <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
-                                        <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
-                                        <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -227,13 +213,6 @@
                                         Active
                                         <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                                     </button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
-                                        <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
-                                        <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
-                                        <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -275,13 +254,6 @@
                                         Cancelled
                                         <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
                                     </button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-confirmed" onclick="setStatus(this,'Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
-                                        <button class="dropdown-item item-pending" onclick="setStatus(this,'Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
-                                        <button class="dropdown-item item-active" onclick="setStatus(this,'Active','badge-active')"><span class="dot dot-active"></span>Active</button>
-                                        <button class="dropdown-item item-cancelled" onclick="setStatus(this,'Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -299,68 +271,57 @@
         </div>
     </main>
 
+    <!-- Shared dropdown portal — lives on <body> so position:fixed works correctly -->
+    <div id="statusDropdown" class="status-dropdown">
+        <div class="dropdown-label">Change Status</div>
+        <button class="dropdown-item item-confirmed"  onclick="applyStatus('Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
+        <button class="dropdown-item item-pending"    onclick="applyStatus('Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
+        <button class="dropdown-item item-active"     onclick="applyStatus('Active','badge-active')"><span class="dot dot-active"></span>Active</button>
+        <button class="dropdown-item item-cancelled"  onclick="applyStatus('Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+    </div>
+
     <script>
-        // Toggle dropdown on badge click
+        let activeBadge = null;
+
         function toggleStatus(e, badge) {
             e.stopPropagation();
-
-            const wrap     = badge.closest('.status-wrap');
-            const dropdown = wrap.querySelector('.status-dropdown');
-            const isOpen   = wrap.classList.contains('open');
-
-            closeAll();
-
-            if (!isOpen) {
-                const rect = badge.getBoundingClientRect();
-
-                // Position dropdown below the badge, left-aligned to badge left edge
-                dropdown.style.top  = (rect.bottom + 6) + 'px';
-                dropdown.style.left = rect.left + 'px';
-
-                // Clamp so it doesn't go off the right edge of viewport
-                const dropW = 172;
-                if (rect.left + dropW > window.innerWidth - 8) {
-                    dropdown.style.left = (window.innerWidth - dropW - 8) + 'px';
-                }
-
-                wrap.classList.add('open');
+            const dd = document.getElementById('statusDropdown');
+            if (activeBadge === badge && dd.classList.contains('open')) {
+                closeAll();
+                return;
             }
+            closeAll();
+            activeBadge = badge;
+            const rect = badge.getBoundingClientRect();
+            let left = rect.left;
+            const dropW = 172;
+            if (left + dropW > window.innerWidth - 8) left = window.innerWidth - dropW - 8;
+            dd.style.top  = (rect.bottom + 6) + 'px';
+            dd.style.left = left + 'px';
+            dd.classList.add('open');
+            badge.closest('.status-wrap').classList.add('open');
+        }
+
+        function applyStatus(label, badgeClass) {
+            if (!activeBadge) return;
+            const chevron = activeBadge.querySelector('.badge-chevron');
+            activeBadge.textContent = label + ' ';
+            activeBadge.appendChild(chevron);
+            activeBadge.className = 'badge ' + badgeClass + ' badge-flash';
+            activeBadge.setAttribute('onclick', 'toggleStatus(event, this)');
+            setTimeout(() => activeBadge && activeBadge.classList.remove('badge-flash'), 500);
+            closeAll();
         }
 
         function closeAll() {
+            document.getElementById('statusDropdown').classList.remove('open');
             document.querySelectorAll('.status-wrap.open').forEach(w => w.classList.remove('open'));
+            activeBadge = null;
         }
 
-        // Set new status on badge
-        function setStatus(btn, label, badgeClass) {
-            e = window.event;
-            if (e) e.stopPropagation();
-
-            const wrap  = btn.closest('.status-wrap');
-            const badge = wrap.querySelector('.badge');
-
-            // Keep the chevron SVG, update only the text node
-            const chevron = badge.querySelector('.badge-chevron');
-            badge.textContent = label + ' ';
-            badge.appendChild(chevron);
-
-            // Update badge color class
-            badge.className = 'badge ' + badgeClass + ' badge-flash';
-
-            // Re-attach onclick (class change wipes inline attributes in some browsers)
-            badge.setAttribute('onclick', "toggleStatus(event, this)");
-
-            setTimeout(() => badge.classList.remove('badge-flash'), 500);
-            wrap.classList.remove('open');
-        }
-
-        // Close on outside click
         document.addEventListener('click', closeAll);
-
-        // Close on scroll
         document.querySelector('.content').addEventListener('scroll', closeAll);
 
-        // Search filter
         document.querySelector('.search-input').addEventListener('input', function () {
             const q = this.value.toLowerCase();
             document.querySelectorAll('tbody tr').forEach(row => {

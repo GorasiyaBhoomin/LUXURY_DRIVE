@@ -1,4 +1,4 @@
-@model LUXURY_DRIVE.Models.AdminProfileViewModel
+@model LUXURY_DRIVE.Models.AdminProfilePageViewModel
 @{
     Layout = null;
     var action = ViewContext.RouteData.Values["action"]?.ToString();
@@ -119,19 +119,19 @@
 
                         <div class="card-body">
                             <div class="form-group">
-                                <label asp-for="FullName">Full Name</label>
-                                <input type="text" asp-for="FullName" class="form-input" placeholder="Your full name" oninput="liveUpdate()" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
+                                <label asp-for="Profile.FullName">Full Name</label>
+                                <input type="text" asp-for="Profile.FullName" class="form-input" placeholder="Your full name" oninput="liveUpdate()" />
+                                <span asp-validation-for="Profile.FullName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="Email">Email Address</label>
-                                <input type="email" asp-for="Email" class="form-input" placeholder="admin@example.com" oninput="liveUpdate()" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <label asp-for="Profile.Email">Email Address</label>
+                                <input type="email" asp-for="Profile.Email" class="form-input" placeholder="admin@example.com" oninput="liveUpdate()" />
+                                <span asp-validation-for="Profile.Email" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="PhoneNumber">Phone Number</label>
-                                <input type="text" asp-for="PhoneNumber" class="form-input" placeholder="+91 XXXXX XXXXX" />
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                <label asp-for="Profile.PhoneNumber">Phone Number</label>
+                                <input type="text" asp-for="Profile.PhoneNumber" class="form-input" placeholder="+91 XXXXX XXXXX" />
+                                <span asp-validation-for="Profile.PhoneNumber" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label>Role</label>
@@ -166,22 +166,22 @@
                             <div class="form-group">
                                 <label>Current Password</label>
                                 <div class="pw-wrap">
-                                    <input type="password" name="CurrentPassword" class="form-input" placeholder="Enter current password" id="pwCurrent" />
+                                    <input type="password" name="Password.CurrentPassword" class="form-input" placeholder="Enter current password" id="pwCurrent" />
                                     <button class="pw-toggle" onclick="togglePw('pwCurrent', this)" type="button">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
-                                <span class="field-validation-valid text-danger" data-valmsg-for="CurrentPassword" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Password.CurrentPassword" data-valmsg-replace="true"></span>
                             </div>
                             <div class="form-group">
                                 <label>New Password</label>
                                 <div class="pw-wrap">
-                                    <input type="password" name="NewPassword" class="form-input" placeholder="Enter new password" oninput="checkStrength()" id="pwNew" />
+                                    <input type="password" name="Password.NewPassword" class="form-input" placeholder="Enter new password" oninput="checkStrength()" id="pwNew" />
                                     <button class="pw-toggle" onclick="togglePw('pwNew', this)" type="button">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
-                                <span class="field-validation-valid text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Password.NewPassword" data-valmsg-replace="true"></span>
                                 <!-- Strength bar -->
                                 <div class="strength-bar" id="strengthBar">
                                     <div class="strength-fill" id="strengthFill"></div>
@@ -191,12 +191,12 @@
                             <div class="form-group">
                                 <label>Confirm New Password</label>
                                 <div class="pw-wrap">
-                                    <input type="password" name="ConfirmPassword" class="form-input" placeholder="Re-enter new password" id="pwConfirm" />
+                                    <input type="password" name="Password.ConfirmPassword" class="form-input" placeholder="Re-enter new password" id="pwConfirm" />
                                     <button class="pw-toggle" onclick="togglePw('pwConfirm', this)" type="button">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
-                                <span class="field-validation-valid text-danger" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Password.ConfirmPassword" data-valmsg-replace="true"></span>
                             </div>
                         </div>
 
@@ -210,92 +210,7 @@
                     </form>
                 </div>
 
-                <!-- Notifications Card -->
-                <div class="settings-card">
-                    <div class="card-header">
-                        <div class="card-icon card-icon-blue">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-                        </div>
-                        <div>
-                            <div class="card-title">Notifications</div>
-                            <div class="card-sub">Control what alerts you receive</div>
-                        </div>
-                    </div>
 
-                    <div class="card-body notif-body">
-                        <div class="toggle-row">
-                            <div class="toggle-info">
-                                <div class="toggle-title">New Bookings</div>
-                                <div class="toggle-sub">Get notified when a customer places a booking</div>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked />
-                                <span class="toggle-knob"></span>
-                            </label>
-                        </div>
-                        <div class="toggle-row">
-                            <div class="toggle-info">
-                                <div class="toggle-title">Booking Cancellations</div>
-                                <div class="toggle-sub">Alert when a booking is cancelled</div>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked />
-                                <span class="toggle-knob"></span>
-                            </label>
-                        </div>
-                        <div class="toggle-row">
-                            <div class="toggle-info">
-                                <div class="toggle-title">New Customer Registrations</div>
-                                <div class="toggle-sub">Notify when a new customer signs up</div>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" />
-                                <span class="toggle-knob"></span>
-                            </label>
-                        </div>
-                        <div class="toggle-row">
-                            <div class="toggle-info">
-                                <div class="toggle-title">Vehicle Maintenance Reminders</div>
-                                <div class="toggle-sub">Scheduled service and maintenance alerts</div>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked />
-                                <span class="toggle-knob"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Danger Zone Card -->
-                <div class="settings-card danger-card">
-                    <div class="card-header">
-                        <div class="card-icon card-icon-red">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-                        </div>
-                        <div>
-                            <div class="card-title">Danger Zone</div>
-                            <div class="card-sub">Irreversible account actions</div>
-                        </div>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="danger-row">
-                            <div>
-                                <div class="danger-title">Sign Out of All Devices</div>
-                                <div class="danger-desc">Revoke all active sessions across all devices</div>
-                            </div>
-                            <button class="btn-danger-outline">Sign Out All</button>
-                        </div>
-                        <div class="danger-divider"></div>
-                        <div class="danger-row">
-                            <div>
-                                <div class="danger-title">Deactivate Account</div>
-                                <div class="danger-desc">Temporarily disable admin access to the panel</div>
-                            </div>
-                            <button class="btn-danger-fill">Deactivate</button>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>

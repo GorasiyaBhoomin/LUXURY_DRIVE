@@ -232,8 +232,10 @@ nav {
 .sidebar-logo {
     display: flex;
     align-items: center;
+    justify-content: center; /* ← add this */
     gap: 10px;
     margin-bottom: 4px;
+    width: 100%; /* ← add this */
 }
 
 .sidebar-logo-icon {

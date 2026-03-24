@@ -135,7 +135,8 @@
                             </td>
                             <td>
                                 <div class="actions-cell">
-                                    <button class="action-btn" title="View">
+                                    <button class="action-btn" title="View"
+                                            onclick="openBooking('BK-2023-001','Michael Chen','michael@example.com','+91 98765 43210','Mercedes-Benz S-Class','LUX-001','Luxury','https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=700&q=80&fit=crop','14 Oct 2023','16 Oct 2023','3 days','$1,200','Confirmed','Airport pickup, child seat required')">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
@@ -176,7 +177,8 @@
                             </td>
                             <td>
                                 <div class="actions-cell">
-                                    <button class="action-btn" title="View">
+                                    <button class="action-btn" title="View"
+                                            onclick="openBooking('BK-2023-002','Sarah Johnson','sarah@example.com','+91 91234 56789','Porsche 911 Carrera','FAST-911','Sports','https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=700&q=80&fit=crop','09 Oct 2023','10 Oct 2023','2 days','$2,500','Pending','GPS navigation required')">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
@@ -217,7 +219,8 @@
                             </td>
                             <td>
                                 <div class="actions-cell">
-                                    <button class="action-btn" title="View">
+                                    <button class="action-btn" title="View"
+                                            onclick="openBooking('BK-2023-003','James Williams','james@example.com','+91 87654 32109','BMW X7 M Sport','BMW-X7M','Luxury','https://images.unsplash.com/photo-1555215695-3004980ad54e?w=700&q=80&fit=crop','20 Oct 2023','24 Oct 2023','5 days','$3,750','Active','Long distance trip, extra insurance')">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
@@ -258,7 +261,8 @@
                             </td>
                             <td>
                                 <div class="actions-cell">
-                                    <button class="action-btn" title="View">
+                                    <button class="action-btn" title="View"
+                                            onclick="openBooking('BK-2023-004','Priya Sharma','priya@example.com','+91 99887 76655','Tesla Model S Plaid','ELEC-01','Electric','https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&q=80&fit=crop','05 Oct 2023','06 Oct 2023','1 day','$850','Cancelled','Customer requested cancellation')">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                 </div>
@@ -271,31 +275,133 @@
         </div>
     </main>
 
-    <!-- Shared dropdown portal — lives on <body> so position:fixed works correctly -->
+    <!-- Shared status dropdown portal -->
     <div id="statusDropdown" class="status-dropdown">
         <div class="dropdown-label">Change Status</div>
-        <button class="dropdown-item item-confirmed"  onclick="applyStatus('Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
-        <button class="dropdown-item item-pending"    onclick="applyStatus('Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
-        <button class="dropdown-item item-active"     onclick="applyStatus('Active','badge-active')"><span class="dot dot-active"></span>Active</button>
-        <button class="dropdown-item item-cancelled"  onclick="applyStatus('Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+        <button class="dropdown-item item-confirmed" onclick="applyStatus('Confirmed','badge-confirmed')"><span class="dot dot-confirmed"></span>Confirmed</button>
+        <button class="dropdown-item item-pending" onclick="applyStatus('Pending','badge-pending')"><span class="dot dot-pending"></span>Pending</button>
+        <button class="dropdown-item item-active" onclick="applyStatus('Active','badge-active')"><span class="dot dot-active"></span>Active</button>
+        <button class="dropdown-item item-cancelled" onclick="applyStatus('Cancelled','badge-cancelled')"><span class="dot dot-cancelled"></span>Cancelled</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         BOOKING DETAIL MODAL
+    ══════════════════════════════════════════ -->
+    <div class="bm-overlay" id="bookingModal" onclick="overlayClose(event)">
+        <div class="bm-modal">
+
+            <button class="bm-close" onclick="closeBooking()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            </button>
+
+            <!-- LEFT: vehicle photo + customer card -->
+            <div class="bm-left">
+                <div class="bm-img-wrap">
+                    <img id="bmVehicleImg" src="" alt="" />
+                    <span class="bm-cat-badge" id="bmCatBadge"></span>
+                </div>
+                <div class="bm-customer-card">
+                    <div class="bm-cust-av" id="bmCustAv"></div>
+                    <div class="bm-cust-info">
+                        <div class="bm-cust-name" id="bmCustName"></div>
+                        <div class="bm-cust-email" id="bmCustEmail"></div>
+                        <div class="bm-cust-phone" id="bmCustPhone"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: booking details -->
+            <div class="bm-right">
+
+                <div class="bm-head">
+                    <div>
+                        <div class="bm-id" id="bmId"></div>
+                        <div class="bm-vehicle-name" id="bmVehicleName"></div>
+                        <div class="bm-plate" id="bmPlate"></div>
+                    </div>
+                    <span class="bm-pill" id="bmStatus"></span>
+                </div>
+
+                <div class="bm-sep"></div>
+
+                <div class="bm-grid">
+                    <div class="bm-cell">
+                        <div class="bm-cell-icon bm-ic-gold">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                        </div>
+                        <div>
+                            <div class="bm-cell-lbl">Pick-up</div>
+                            <div class="bm-cell-val" id="bmPickup"></div>
+                        </div>
+                    </div>
+                    <div class="bm-cell">
+                        <div class="bm-cell-icon bm-ic-gold">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                        </div>
+                        <div>
+                            <div class="bm-cell-lbl">Return</div>
+                            <div class="bm-cell-val" id="bmReturn"></div>
+                        </div>
+                    </div>
+                    <div class="bm-cell">
+                        <div class="bm-cell-icon bm-ic-blue">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                        </div>
+                        <div>
+                            <div class="bm-cell-lbl">Duration</div>
+                            <div class="bm-cell-val" id="bmDuration"></div>
+                        </div>
+                    </div>
+                    <div class="bm-cell">
+                        <div class="bm-cell-icon bm-ic-green">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                        </div>
+                        <div>
+                            <div class="bm-cell-lbl">Total Amount</div>
+                            <div class="bm-cell-val bm-amount" id="bmAmount"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bm-sep"></div>
+
+                <div class="bm-notes">
+                    <div class="bm-notes-title">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        Special Notes
+                    </div>
+                    <div class="bm-notes-body" id="bmNotes"></div>
+                </div>
+
+                <div class="bm-actions">
+                    <button class="bm-btn-confirm" id="bmBtnConfirm" onclick="quickConfirm()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        Confirm
+                    </button>
+                    <button class="bm-btn-cancel" id="bmBtnCancel" onclick="quickCancel()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                        Cancel Booking
+                    </button>
+                    <button class="bm-btn-close" onclick="closeBooking()">Close</button>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <script>
+        /* ══ STATUS DROPDOWN ══ */
         let activeBadge = null;
 
         function toggleStatus(e, badge) {
             e.stopPropagation();
             const dd = document.getElementById('statusDropdown');
-            if (activeBadge === badge && dd.classList.contains('open')) {
-                closeAll();
-                return;
-            }
+            if (activeBadge === badge && dd.classList.contains('open')) { closeAll(); return; }
             closeAll();
             activeBadge = badge;
             const rect = badge.getBoundingClientRect();
             let left = rect.left;
-            const dropW = 172;
-            if (left + dropW > window.innerWidth - 8) left = window.innerWidth - dropW - 8;
+            if (left + 172 > window.innerWidth - 8) left = window.innerWidth - 172 - 8;
             dd.style.top  = (rect.bottom + 6) + 'px';
             dd.style.left = left + 'px';
             dd.classList.add('open');
@@ -305,10 +411,10 @@
         function applyStatus(label, badgeClass) {
             if (!activeBadge) return;
             const chevron = activeBadge.querySelector('.badge-chevron');
-            activeBadge.textContent = label + ' ';
+            activeBadge.innerHTML = '';
+            activeBadge.appendChild(document.createTextNode(label + ' '));
             activeBadge.appendChild(chevron);
             activeBadge.className = 'badge ' + badgeClass + ' badge-flash';
-            activeBadge.setAttribute('onclick', 'toggleStatus(event, this)');
             setTimeout(() => activeBadge && activeBadge.classList.remove('badge-flash'), 500);
             closeAll();
         }
@@ -328,6 +434,83 @@
                 row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
             });
         });
+
+        /* ══ BOOKING DETAIL MODAL ══ */
+        const catColors = {
+            luxury:   { bg:'rgba(201,168,76,.2)',  color:'#c9a84c' },
+            sports:   { bg:'rgba(59,130,246,.2)',   color:'#3b82f6' },
+            electric: { bg:'rgba(168,85,247,.2)',   color:'#a855f7' },
+            suv:      { bg:'rgba(45,181,104,.2)',   color:'#2db568' },
+        };
+        const pillMap = {
+            confirmed: 'bm-pill-confirmed',
+            pending:   'bm-pill-pending',
+            active:    'bm-pill-active',
+            cancelled: 'bm-pill-cancelled',
+        };
+
+        function openBooking(id, custName, custEmail, custPhone,
+                             vehicleName, plate, category, imgSrc,
+                             pickup, ret, duration, amount, status, notes) {
+
+            /* ─ left pane ─ */
+            document.getElementById('bmVehicleImg').src = imgSrc;
+
+            const cc = catColors[category.toLowerCase()] || catColors.luxury;
+            const badge = document.getElementById('bmCatBadge');
+            badge.textContent      = category;
+            badge.style.background = cc.bg;
+            badge.style.color      = cc.color;
+
+            const initials = custName.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+            const av = document.getElementById('bmCustAv');
+            av.textContent      = initials;
+            av.style.background = cc.color;
+
+            document.getElementById('bmCustName').textContent  = custName;
+            document.getElementById('bmCustEmail').textContent = custEmail;
+            document.getElementById('bmCustPhone').textContent = custPhone;
+
+            /* ─ right pane ─ */
+            document.getElementById('bmId').textContent          = '#' + id;
+            document.getElementById('bmVehicleName').textContent  = vehicleName;
+            document.getElementById('bmPlate').textContent        = plate;
+            document.getElementById('bmPickup').textContent       = pickup;
+            document.getElementById('bmReturn').textContent       = ret;
+            document.getElementById('bmDuration').textContent     = duration;
+            document.getElementById('bmAmount').textContent       = amount;
+            document.getElementById('bmNotes').textContent        = notes || '—';
+
+            const pill = document.getElementById('bmStatus');
+            pill.textContent = status;
+            pill.className   = 'bm-pill ' + (pillMap[status.toLowerCase()] || 'bm-pill-pending');
+
+            /* ─ button visibility ─ */
+            const isCancelled = status.toLowerCase() === 'cancelled';
+            const isConfirmed = status.toLowerCase() === 'confirmed';
+            document.getElementById('bmBtnConfirm').style.display = (isCancelled || isConfirmed) ? 'none' : 'inline-flex';
+            document.getElementById('bmBtnCancel').style.display  = isCancelled ? 'none' : 'inline-flex';
+
+            document.getElementById('bookingModal').classList.add('open');
+        }
+
+        function overlayClose(e) { if (e.target === e.currentTarget) closeBooking(); }
+        function closeBooking()  { document.getElementById('bookingModal').classList.remove('open'); }
+
+        function quickConfirm() {
+            const pill = document.getElementById('bmStatus');
+            pill.textContent = 'Confirmed';
+            pill.className   = 'bm-pill bm-pill-confirmed';
+            document.getElementById('bmBtnConfirm').style.display = 'none';
+        }
+
+        function quickCancel() {
+            const pill = document.getElementById('bmStatus');
+            pill.textContent = 'Cancelled';
+            pill.className   = 'bm-pill bm-pill-cancelled';
+            document.getElementById('bmBtnConfirm').style.display = 'none';
+            document.getElementById('bmBtnCancel').style.display  = 'none';
+        }
     </script>
 
 </body>

@@ -552,20 +552,22 @@ tbody tr:hover .vehicle-thumb img {
     left: 0;
     width: 172px;
     background: #1e1e1e;
-    border: 1px solid #2a2a2a;
+    border: 1px solid #333;
     border-radius: 10px;
     padding: 6px;
     z-index: 99999;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.4);
-    /* Simple fade — no nested opacity that hides children */
-    visibility: hidden;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.75), 0 2px 6px rgba(0,0,0,0.4);
     opacity: 0;
-    transition: opacity .15s ease, visibility .15s ease;
+    transform: scale(0.95) translateY(-4px);
+    transform-origin: top left;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
 }
 
-.status-wrap.open .status-dropdown {
-    visibility: visible;
+.status-dropdown.open {
     opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: all;
 }
 
 .dropdown-label {
@@ -594,8 +596,19 @@ tbody tr:hover .vehicle-thumb img {
     border-radius: 7px;
     cursor: pointer;
     text-align: left;
-    transition: background .15s, color .15s;
+    opacity: 0;
+    transform: translateX(6px);
+    transition: background .15s, color .15s, opacity .15s ease, transform .15s ease;
 }
+
+.status-dropdown.open .dropdown-item {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.status-dropdown.open .dropdown-item:nth-child(2) { transition-delay: .03s; }
+.status-dropdown.open .dropdown-item:nth-child(3) { transition-delay: .07s; }
+.status-dropdown.open .dropdown-item:nth-child(4) { transition-delay: .11s; }
 
 .dropdown-item:hover {
     background: rgba(255, 255, 255, .05);

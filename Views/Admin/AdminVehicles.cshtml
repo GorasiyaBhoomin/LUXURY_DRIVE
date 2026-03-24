@@ -551,12 +551,6 @@
                             <td>
                                 <div class="status-wrap">
                                     <button class="badge badge-available" onclick="toggleStatus(event, this)">Available<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
-                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
-                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -597,12 +591,6 @@
                             <td>
                                 <div class="status-wrap">
                                     <button class="badge badge-available" onclick="toggleStatus(event, this)">Available<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
-                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
-                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -643,12 +631,6 @@
                             <td>
                                 <div class="status-wrap">
                                     <button class="badge badge-rented" onclick="toggleStatus(event, this)">Rented<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
-                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
-                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -689,12 +671,6 @@
                             <td>
                                 <div class="status-wrap">
                                     <button class="badge badge-maintenance" onclick="toggleStatus(event, this)">Maintenance<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
-                                    <div class="status-dropdown">
-                                        <div class="dropdown-label">Change Status</div>
-                                        <button class="dropdown-item item-available" onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
-                                        <button class="dropdown-item item-rented" onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
-                                        <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -715,6 +691,14 @@
             </div>
         </div>
     </main>
+
+    <!-- Shared status dropdown portal (outside .content so position:fixed works) -->
+    <div id="statusDropdown" class="status-dropdown">
+        <div class="dropdown-label">Change Status</div>
+        <button class="dropdown-item item-available" onclick="applyStatus('Available','badge-available')"><span class="dot dot-available"></span>Available</button>
+        <button class="dropdown-item item-rented" onclick="applyStatus('Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
+        <button class="dropdown-item item-maintenance" onclick="applyStatus('Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
+    </div>
 
     <!-- ── VIEW MODAL (unchanged) ── -->
     <div class="modal-overlay" id="viewModal" onclick="closeViewModal(event)">
@@ -933,12 +917,6 @@
                             Available
                             <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                         </button>
-                        <div class="status-dropdown">
-                            <div class="dropdown-label">Change Status</div>
-                            <button class="dropdown-item item-available"   onclick="setStatus(this,'Available','badge-available')"><span class="dot dot-available"></span>Available</button>
-                            <button class="dropdown-item item-rented"      onclick="setStatus(this,'Rented','badge-rented')"><span class="dot dot-rented"></span>Rented</button>
-                            <button class="dropdown-item item-maintenance" onclick="setStatus(this,'Maintenance','badge-maintenance')"><span class="dot dot-maintenance"></span>Maintenance</button>
-                        </div>
                     </div>
                 </td>
                 <td>
@@ -976,41 +954,41 @@
         /* ══════════════════════════════════════
            STATUS DROPDOWN
            ══════════════════════════════════════ */
+        let activeBadge = null;
+
         function toggleStatus(e, badge) {
             e.stopPropagation();
-            const wrap = badge.closest('.status-wrap');
-            const isOpen = wrap.classList.contains('open');
-            closeAllDropdowns();
-            if (!isOpen) {
-                const rect = badge.getBoundingClientRect();
-                const dd = wrap.querySelector('.status-dropdown');
-                dd.style.top  = (rect.bottom + 6) + 'px';
-                dd.style.left = rect.left + 'px';
-                if (rect.left + 172 > window.innerWidth - 8)
-                    dd.style.left = (window.innerWidth - 172 - 8) + 'px';
-                wrap.classList.add('open');
-            }
+            const dd = document.getElementById('statusDropdown');
+            if (activeBadge === badge && dd.classList.contains('open')) { closeAll(); return; }
+            closeAll();
+            activeBadge = badge;
+            const rect = badge.getBoundingClientRect();
+            let left = rect.left;
+            if (left + 172 > window.innerWidth - 8) left = window.innerWidth - 172 - 8;
+            dd.style.top  = (rect.bottom + 6) + 'px';
+            dd.style.left = left + 'px';
+            dd.classList.add('open');
+            badge.closest('.status-wrap').classList.add('open');
         }
 
-        function closeAllDropdowns() {
+        function applyStatus(label, badgeClass) {
+            if (!activeBadge) return;
+            const chevron = activeBadge.querySelector('.badge-chevron').cloneNode(true);
+            activeBadge.textContent = label + ' ';
+            activeBadge.appendChild(chevron);
+            activeBadge.className = 'badge ' + badgeClass + ' badge-flash';
+            setTimeout(() => activeBadge && activeBadge.classList.remove('badge-flash'), 500);
+            closeAll();
+        }
+
+        function closeAll() {
+            document.getElementById('statusDropdown').classList.remove('open');
             document.querySelectorAll('.status-wrap.open').forEach(w => w.classList.remove('open'));
+            activeBadge = null;
         }
 
-        function setStatus(btn, label, badgeClass) {
-            const e = window.event; if (e) e.stopPropagation();
-            const wrap    = btn.closest('.status-wrap');
-            const badge   = wrap.querySelector('.badge');
-            const chevron = badge.querySelector('.badge-chevron');
-            badge.textContent = label + ' ';
-            badge.appendChild(chevron);
-            badge.className = 'badge ' + badgeClass + ' badge-flash';
-            badge.setAttribute('onclick', 'toggleStatus(event, this)');
-            setTimeout(() => badge.classList.remove('badge-flash'), 500);
-            wrap.classList.remove('open');
-        }
-
-        document.addEventListener('click', closeAllDropdowns);
-        document.querySelector('.content').addEventListener('scroll', closeAllDropdowns);
+        document.addEventListener('click', closeAll);
+        document.querySelector('.content').addEventListener('scroll', closeAll);
 
         /* ══════════════════════════════════════
            VIEW MODAL

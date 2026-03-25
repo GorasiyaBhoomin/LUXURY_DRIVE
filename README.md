@@ -110,7 +110,7 @@
 <br/>
 
 ### 📊 Admin Dashboard
-<img src="[https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&h=450&q=80&fit=crop](https://cdn.dribbble.com/userupload/46063475/file/b9296618795641b675efd8ddd82a3644.png?resize=752x&vertical=center)" width="100%" style="border-radius:10px"/>
+<img src="[https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&h=450&q=80&fit=crop]" width="100%" style="border-radius:10px"/>
 
 <br/>
 

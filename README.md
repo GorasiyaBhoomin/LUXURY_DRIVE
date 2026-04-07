@@ -110,7 +110,11 @@
 <br/>
 
 ### 📊 Admin Dashboard
+<<<<<<< HEAD
 <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&h=450&q=80&fit=crop" width="100%" style="border-radius:10px"/>
+=======
+<img src="[https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&h=450&q=80&fit=crop]" width="100%" style="border-radius:10px"/>
+>>>>>>> d68ec3a62fad8de4dabc01d42e08bcd2723e9455
 
 <br/>
 

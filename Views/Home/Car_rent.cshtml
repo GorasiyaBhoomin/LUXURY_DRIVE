@@ -132,6 +132,8 @@
 
 
     <form class="book-wrap" asp-controller="Home" asp-action="SubmitRent" method="post">
+        <input type="hidden" asp-for="VehicleId" />
+        <input type="hidden" asp-for="UserId" />
 
         <!-- LEFT FORM -->
         <div class="book-form-col">
@@ -220,21 +222,21 @@
         <!-- RIGHT SUMMARY -->
         <div class="book-summary-col">
             <div class="summary-card">
-                <img class="summary-car-img" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80">
+                <img class="summary-car-img" src="@(ViewBag.Vehicle?.ImageUrl ?? "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80")">
                 <div class="summary-body">
-                    <div class="summary-car-name">BMW M5</div>
-                    <div class="summary-car-type">Luxury</div>
+                    <div class="summary-car-name">@(ViewBag.Vehicle?.Name ?? "BMW M5")</div>
+                    <div class="summary-car-type">@(ViewBag.Vehicle?.Category ?? "Luxury")</div>
                     <div class="summary-line">
                         <span>Price / Day</span>
-                        <span>₹10,000</span>
+                        <span>₹<span id="price-per-day">@(ViewBag.Vehicle?.PriceDay?.Replace(",", "").Replace("₹", "").Trim() ?? "10000")</span></span>
                     </div>
                     <div class="summary-line">
                         <span>Days</span>
-                        <span>1</span>
+                        <span id="summary-days">1</span>
                     </div>
                     <div class="summary-total-block">
                         <span>Total</span>
-                        <span>₹10,000</span>
+                        <span>₹<span id="summary-total">@(ViewBag.Vehicle?.PriceDay?.Replace(",", "").Replace("₹", "").Trim() ?? "10000")</span></span>
                     </div>
                 </div>
 
@@ -251,6 +253,26 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
-
+    
+    <script>
+        $(document).ready(function () {
+            $('#NumberOfDays').on('input change', function () {
+                var days = parseInt($(this).val()) || 1;
+                if (days < 1) {
+                    days = 1;
+                    $(this).val(1);
+                }
+                $('#summary-days').text(days);
+                var pricePerDay = parseInt($('#price-per-day').text().replace(/,/g, '')) || 0;
+                var total = days * pricePerDay;
+                $('#summary-total').text(total.toLocaleString('en-IN'));
+            });
+            
+            // Format initial total just in case
+            var initialPrice = parseInt($('#price-per-day').text().replace(/,/g, '')) || 0;
+            $('#summary-total').text(initialPrice.toLocaleString('en-IN'));
+            $('#price-per-day').text(initialPrice.toLocaleString('en-IN'));
+        });
+    </script>
 </body>
 </html>

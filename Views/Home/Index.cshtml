@@ -97,211 +97,43 @@
 
         <div class="cars-grid" id="carsGrid">
 
-            <div class="car-card" data-name="BMW M5" data-type="Luxury">
-                <div class="car-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80" alt="BMW M5">
-                    <span class="car-badge badge-luxury">Luxury</span>
-                </div>
-                <div class="car-info">
-                    <div class="car-name">BMW M5</div>
-                    <div class="car-specs">
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                            4 Seats
-                        </div>
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
-                            </svg>
-                            Automatic
-                        </div>
+            @foreach (var car in ViewBag.Vehicles)
+            {
+                <div class="car-card" data-name="@car.Name" data-type="@car.Category">
+                    <div class="car-image-wrap">
+                        <img src="@car.ImageUrl" alt="@car.Name">
+                        <span class="car-badge @(car.Category == "Luxury" ? "badge-luxury" : "")" style="@(car.Category == "Sports" ? "background:#7C3AED" : (car.Category == "SUV" ? "background:#047857" : (car.Category == "Electric" ? "background:#0284C7" : "")))">@car.Category</span>
                     </div>
-                    <div class="car-footer">
-                        <div class="car-price">₹10,000 <span>/day</span></div>
-                        <div class="car-actions">
-                            <a href="/Home/Car_view" class="btn-sm btn-sm-outline">View</a>
-                            <a href="/Home/Car_rent" class="btn-sm btn-sm-fill">Rent</a>
+                    <div class="car-info">
+                        <div class="car-name">@car.Name</div>
+                        <div class="car-specs">
+                            <div class="car-spec">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                4 Seats
+                            </div>
+                            <div class="car-spec">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                                </svg>
+                                Automatic
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="car-card" data-name="Audi R8" data-type="Sports">
-                <div class="car-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80" alt="Audi R8">
-                    <span class="car-badge" style="background:#7C3AED">Sports</span>
-                </div>
-                <div class="car-info">
-                    <div class="car-name">Audi R8</div>
-                    <div class="car-specs">
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                            </svg>
-                            2 Seats
-                        </div>
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
-                            </svg>
-                            Automatic
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div class="car-price">₹20,000 <span>/day</span></div>
-                        <div class="car-actions">
-                            <a href="#" class="btn-sm btn-sm-outline">View</a>
-                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
+                        <div class="car-footer">
+                            <div class="car-price">₹@car.PriceDay <span>/day</span></div>
+                            <div class="car-actions">
+                                <a href="/Home/Car_view?id=@car.VehicleId" class="btn-sm btn-sm-outline">View</a>
+                                <a href="/Home/Car_rent?id=@car.VehicleId" class="btn-sm btn-sm-fill">Rent</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="car-card" data-name="Range Rover Velar" data-type="SUV">
-                <div class="car-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Range Rover Velar">
-                    <span class="car-badge" style="background:#047857">SUV</span>
-                </div>
-                <div class="car-info">
-                    <div class="car-name">Range Rover Velar</div>
-                    <div class="car-specs">
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                            5 Seats
-                        </div>
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
-                            </svg>
-                            Automatic
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div class="car-price">₹15,000 <span>/day</span></div>
-                        <div class="car-actions">
-                            <a href="#" class="btn-sm btn-sm-outline">View</a>
-                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="car-card" data-name="Mercedes S-Class" data-type="Luxury">
-                <div class="car-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80" alt="Mercedes S-Class">
-                    <span class="car-badge badge-luxury">Luxury</span>
-                </div>
-                <div class="car-info">
-                    <div class="car-name">Mercedes S-Class</div>
-                    <div class="car-specs">
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                            5 Seats
-                        </div>
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
-                            </svg>
-                            Automatic
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div class="car-price">₹12,000 <span>/day</span></div>
-                        <div class="car-actions">
-                            <a href="#" class="btn-sm btn-sm-outline">View</a>
-                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="car-card" data-name="Tesla Model S" data-type="Electric">
-                <div class="car-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1561580125-028ee3bd62eb?w=600&q=80" alt="Tesla Model S">
-                    <span class="car-badge" style="background:#0284C7">Electric</span>
-                </div>
-                <div class="car-info">
-                    <div class="car-name">Tesla Model S</div>
-                    <div class="car-specs">
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                            5 Seats
-                        </div>
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
-                            </svg>
-                            Automatic
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div class="car-price">₹13,000 <span>/day</span></div>
-                        <div class="car-actions">
-                            <a href="#" class="btn-sm btn-sm-outline">View</a>
-                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="car-card" data-name="Lamborghini Huracan" data-type="Sports">
-                <div class="car-image-wrap">
-                    <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&q=80" alt="Lamborghini Huracan">
-                    <span class="car-badge" style="background:#7C3AED">Sports</span>
-                </div>
-                <div class="car-info">
-                    <div class="car-name">Lamborghini Huracan</div>
-                    <div class="car-specs">
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                            </svg>
-                            2 Seats
-                        </div>
-                        <div class="car-spec">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83" />
-                            </svg>
-                            Automatic
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div class="car-price">₹30,000 <span>/day</span></div>
-                        <div class="car-actions">
-                            <a href="#" class="btn-sm btn-sm-outline">View</a>
-                            <a href="#" class="btn-sm btn-sm-fill">Rent</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
 
         </div>
     </section>

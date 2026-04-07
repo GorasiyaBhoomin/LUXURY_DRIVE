@@ -117,28 +117,28 @@
                     <div class="stat-icon icon-gold">📊</div>
                     <div>
                         <div class="stat-label">Total Bookings</div>
-                        <div class="stat-value">0</div>
+                        <div class="stat-value">@ViewBag.TotalRents</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon icon-orange">⏱</div>
+                    <div class="stat-icon icon-orange">👥</div>
                     <div>
-                        <div class="stat-label">Pending</div>
-                        <div class="stat-value">0</div>
+                        <div class="stat-label">Customers</div>
+                        <div class="stat-value">@ViewBag.TotalUsers</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon icon-green">✓</div>
+                    <div class="stat-icon icon-green">🚗</div>
                     <div>
-                        <div class="stat-label">Confirmed</div>
-                        <div class="stat-value">0</div>
+                        <div class="stat-label">Vehicles</div>
+                        <div class="stat-value">@ViewBag.TotalVehicles</div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-gold">₹</div>
                     <div>
                         <div class="stat-label">Total Revenue</div>
-                        <div class="stat-value">₹0</div>
+                        <div class="stat-value">₹@(((decimal)ViewBag.TotalRevenue).ToString("N0"))</div>
                     </div>
                 </div>
             </div>
@@ -146,6 +146,8 @@
             <!-- RECENT BOOKINGS -->
             <div class="bookings-card">
                 <div class="bookings-header">Recent Bookings</div>
+                @if (ViewBag.RecentBookings != null && ((IEnumerable<LUXURY_DRIVE.Models.Entities.CarRent>)ViewBag.RecentBookings).Any())
+                {
                 <table>
                     <thead>
                         <tr>
@@ -153,16 +155,33 @@
                             <th>VEHICLE</th>
                             <th>DURATION</th>
                             <th>AMOUNT</th>
-                            <th>STATUS</th>
-                            <th>ACTIONS</th>
+                            <th>PICKUP DATE</th>
                         </tr>
                     </thead>
+                    <tbody>
+                    @foreach (var b in (IEnumerable<LUXURY_DRIVE.Models.Entities.CarRent>)ViewBag.RecentBookings)
+                    {
+                        decimal amt = 0;
+                        if (b.Vehicle != null) decimal.TryParse(b.Vehicle.PriceDay.Replace(",","").Trim(), out amt);
+                        <tr>
+                            <td>@(b.User?.FullName ?? b.FirstName + " " + b.LastName)</td>
+                            <td>@(b.Vehicle?.Name ?? "—")</td>
+                            <td>@b.NumberOfDays days</td>
+                            <td>₹@((amt * b.NumberOfDays).ToString("N0"))</td>
+                            <td>@b.PickupDate.ToString("dd MMM yyyy")</td>
+                        </tr>
+                    }
+                    </tbody>
                 </table>
+                }
+                else
+                {
                 <div class="empty-state">
                     <div class="empty-icon">📋</div>
                     <div class="empty-title">No bookings yet</div>
                     <div class="empty-sub">Bookings will appear here once customers make reservations</div>
                 </div>
+                }
             </div>
 
         </div>

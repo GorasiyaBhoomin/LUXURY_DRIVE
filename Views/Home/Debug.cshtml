@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Debug";
+}
+
+<h2>Authentication Debug</h2>
+
+<p><strong>Is Authenticated:</strong> @ViewBag.IsAuthenticated</p>
+<p><strong>User Name:</strong> @ViewBag.Name</p>
+
+<h3>Claims:</h3>
+<ul>
+@foreach (var claim in ViewBag.Claims)
+{
+    <li><strong>@claim.Type:</strong> @claim.Value</li>
+}
+</ul>
+
+<a href="/Home/Profile">Go to Profile</a>

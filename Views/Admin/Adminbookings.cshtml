@@ -1,7 +1,9 @@
-﻿@{
+@{
     Layout = null;
     var action = ViewContext.RouteData.Values["action"]?.ToString();
     ViewData["Title"] = "Adminbookings";
+    bool openAddForm = ViewBag.OpenAddForm == true;
+    bool openEditModal = ViewBag.OpenEditModal == true;
 }
 
 <!DOCTYPE html>
@@ -72,14 +74,98 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                     Filter
                 </button>
-                <button class="btn-export">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                    Export
+                <button class="btn-export" onclick="toggleAddBookingForm()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                    Add Booking
                 </button>
             </div>
         </header>
 
         <div class="content">
+            @if (TempData["EmailStatus"] != null)
+            {
+                var emailMsg = TempData["EmailStatus"].ToString();
+                var isError = emailMsg.StartsWith("Error");
+                <div style="padding: 12px 20px; background: @(isError ? "rgba(224,92,46,.1)" : "rgba(45,181,104,.1)"); color: @(isError ? "#e05c2e" : "#2db568"); border-radius: 8px; margin-bottom: 20px; border: 1px solid @(isError ? "rgba(224,92,46,.2)" : "rgba(45,181,104,.2)"); font-size: 13px; font-weight: 600;">
+                    @emailMsg
+                </div>
+            }
+
+            <!-- ADD BOOKING FORM -->
+            <div id="addBookingCard" style="background:var(--surface,#1a1a2e);border:1px solid var(--border,#2a2a3e);border-radius:14px;margin-bottom:22px;overflow:hidden;display:@(openAddForm ? "block" : "none")">
+                <form asp-controller="Admin" asp-action="AddBooking" method="post">
+                    <div style="padding:16px 20px;border-bottom:1px solid var(--border,#2a2a3e);font-weight:700;font-size:13.5px;color:#fff">Add New Booking</div>
+                    <div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">First Name *</label>
+                            <input type="text" name="FirstName" class="form-input" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="First name" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Last Name *</label>
+                            <input type="text" name="LastName" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="Last name" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Email *</label>
+                            <input type="email" name="Email" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="Email" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Phone *</label>
+                            <input type="text" name="Phone" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="Phone" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">License Number *</label>
+                            <input type="text" name="LicenseNumber" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="License no." />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">License Expiry *</label>
+                            <input type="date" name="LicenseExpiryDate" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Pickup Date *</label>
+                            <input type="date" name="PickupDate" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Pickup Time *</label>
+                            <input type="text" name="PickupTime" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="e.g. 10:00 AM" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Number of Days *</label>
+                            <input type="number" name="NumberOfDays" min="1" max="30" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px" placeholder="Days" />
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Vehicle</label>
+                            <select name="VehicleId" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px">
+                                <option value="">-- Select Vehicle --</option>
+                                @if (ViewBag.Vehicles != null)
+                                {
+                                    foreach (var v in ViewBag.Vehicles)
+                                    {
+                                        <option value="@v.VehicleId">@v.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;display:block;margin-bottom:5px">Customer</label>
+                            <select name="UserId" style="width:100%;padding:8px 11px;background:#111;border:1px solid #2a2a3e;border-radius:7px;color:#fff;font-size:12.5px">
+                                <option value="">-- Select Customer --</option>
+                                @if (ViewBag.Users != null)
+                                {
+                                    foreach (var u in ViewBag.Users)
+                                    {
+                                        <option value="@u.UserId">@u.FullName (@u.Email)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div style="padding:0 20px 18px;display:flex;justify-content:flex-end;gap:10px">
+                        <button type="button" onclick="toggleAddBookingForm()" style="padding:8px 15px;border-radius:7px;border:1px solid #2a2a3e;background:transparent;color:#888;font-size:12px;cursor:pointer">Cancel</button>
+                        <button type="submit" style="padding:8px 18px;border-radius:7px;border:none;background:#2db568;color:#fff;font-size:12px;font-weight:700;cursor:pointer">✓ Add Booking</button>
+                    </div>
+                </form>
+            </div>
+
             <div class="search-wrap">
                 <span class="search-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
@@ -100,180 +186,83 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @if (ViewBag.Bookings != null)
+                    {
+                        foreach (var booking in ViewBag.Bookings)
+                        {
+                            var days = booking.NumberOfDays;
+                            var amount = "—";
+                            decimal priceValue = 0;
+                            if (booking.Vehicle != null && decimal.TryParse(booking.Vehicle.PriceDay.Replace("₹", "").Replace(",", "").Trim(), out priceValue))
+                            {
+                                amount = "₹" + (priceValue * days).ToString("N0");
+                            }
 
-                        <!-- Row 1 -->
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <span class="customer-name">Michael Chen</span>
-                                    <span class="customer-email">michael@example.com</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="vehicle-cell">
-                                    <div class="vehicle-thumb">
-                                        <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=120&q=70&fit=crop" alt="Mercedes-Benz S-Class" />
+                            <tr>
+                                <td>
+                                    <div class="customer-cell">
+                                        <span class="customer-name">@(booking.User?.FullName ?? booking.FirstName + " " + booking.LastName)</span>
+                                        <span class="customer-email">@(booking.User?.Email ?? booking.Email)</span>
                                     </div>
-                                    <div>
-                                        <div class="vehicle-name">Mercedes-Benz S-Class</div>
-                                        <div class="vehicle-plate">LUX-001</div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-cell">
+                                        <div class="vehicle-thumb">
+                                            <img src="@(booking.Vehicle?.ImageUrl ?? "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=120&q=70&fit=crop")" alt="@(booking.Vehicle?.Name)" />
+                                        </div>
+                                        <div>
+                                            <div class="vehicle-name">@(booking.Vehicle?.Name ?? "Unknown Vehicle")</div>
+                                            <div class="vehicle-plate">@booking.LicenseNumber</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="duration-days">3 days</div>
-                                <div class="duration-range">14 Oct 2023 – 16 Oct 2023</div>
-                            </td>
-                            <td><span class="amount-val">$1,200</span></td>
-                            <td>
-                                <div class="status-wrap">
-                                    <button class="badge badge-confirmed" onclick="toggleStatus(event, this)">
-                                        Confirmed
-                                        <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View"
-                                            onclick="openBooking('BK-2023-001','Michael Chen','michael@example.com','+91 98765 43210','Mercedes-Benz S-Class','LUX-001','Luxury','https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=700&q=80&fit=crop','14 Oct 2023','16 Oct 2023','3 days','$1,200','Confirmed','Airport pickup, child seat required')">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <span class="customer-name">Sarah Johnson</span>
-                                    <span class="customer-email">sarah@example.com</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="vehicle-cell">
-                                    <div class="vehicle-thumb">
-                                        <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=120&q=70&fit=crop" alt="Porsche 911 Carrera" />
+                                </td>
+                                <td>
+                                    <div class="duration-days">@days days</div>
+                                    <div class="duration-range">@booking.PickupDate.ToString("dd MMM yyyy") – @booking.PickupDate.AddDays(days).ToString("dd MMM yyyy")</div>
+                                </td>
+                                <td><span class="amount-val">@amount</span></td>
+                                <td>
+                                    <div class="status-wrap">
+                                        @{
+                                            var st = booking.Status ?? "Pending";
+                                            var badgeClass = "badge-" + st.ToLower();
+                                        }
+                                        <button class="badge @badgeClass" onclick="toggleStatus(event, this, @booking.RentId)">
+                                            @st
+                                            <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+                                        </button>
                                     </div>
-                                    <div>
-                                        <div class="vehicle-name">Porsche 911 Carrera</div>
-                                        <div class="vehicle-plate">FAST-911</div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-btn" title="View"
+                                                onclick="openBooking('@booking.RentId','@((booking.User?.FullName ?? booking.FirstName + " " + booking.LastName).Replace("'", "\\'"))','@((booking.User?.Email ?? booking.Email).Replace("'", "\\'"))','@booking.Phone','@((booking.Vehicle?.Name ?? "").Replace("'", "\\'"))','@booking.LicenseNumber','@((booking.Vehicle?.Category ?? "Luxury").Replace("'", "\\'"))','@(booking.Vehicle?.ImageUrl ?? "")','@booking.PickupDate.ToString("dd MMM yyyy")','@booking.PickupDate.AddDays(days).ToString("dd MMM yyyy")','@days days','@amount','@(booking.Status ?? "Pending")','')">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                        </button>
+                                        <form method="post" asp-action="SendBookingEmail" style="display:inline;" onsubmit="return confirm('Do you want to manually send the booking confirmation email to this customer?');">
+                                            <input type="hidden" name="id" value="@booking.RentId" />
+                                            <button type="submit" class="action-btn" title="Send Email">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                                            </button>
+                                        </form>
+                                        <form method="post" asp-action="DeleteBooking" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
+                                            <input type="hidden" name="id" value="@booking.RentId" />
+                                            <button type="submit" class="action-btn danger" title="Delete">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>
+                                            </button>
+                                        </form>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="duration-days">2 days</div>
-                                <div class="duration-range">09 Oct 2023 – 10 Oct 2023</div>
-                            </td>
-                            <td><span class="amount-val">$2,500</span></td>
-                            <td>
-                                <div class="status-wrap">
-                                    <button class="badge badge-pending" onclick="toggleStatus(event, this)">
-                                        Pending
-                                        <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View"
-                                            onclick="openBooking('BK-2023-002','Sarah Johnson','sarah@example.com','+91 91234 56789','Porsche 911 Carrera','FAST-911','Sports','https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=700&q=80&fit=crop','09 Oct 2023','10 Oct 2023','2 days','$2,500','Pending','GPS navigation required')">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <span class="customer-name">James Williams</span>
-                                    <span class="customer-email">james@example.com</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="vehicle-cell">
-                                    <div class="vehicle-thumb">
-                                        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=120&q=70&fit=crop" alt="BMW X7 M Sport" />
-                                    </div>
-                                    <div>
-                                        <div class="vehicle-name">BMW X7 M Sport</div>
-                                        <div class="vehicle-plate">BMW-X7M</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="duration-days">5 days</div>
-                                <div class="duration-range">20 Oct 2023 – 24 Oct 2023</div>
-                            </td>
-                            <td><span class="amount-val">$3,750</span></td>
-                            <td>
-                                <div class="status-wrap">
-                                    <button class="badge badge-active" onclick="toggleStatus(event, this)">
-                                        Active
-                                        <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View"
-                                            onclick="openBooking('BK-2023-003','James Williams','james@example.com','+91 87654 32109','BMW X7 M Sport','BMW-X7M','Luxury','https://images.unsplash.com/photo-1555215695-3004980ad54e?w=700&q=80&fit=crop','20 Oct 2023','24 Oct 2023','5 days','$3,750','Active','Long distance trip, extra insurance')">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 4 -->
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <span class="customer-name">Priya Sharma</span>
-                                    <span class="customer-email">priya@example.com</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="vehicle-cell">
-                                    <div class="vehicle-thumb">
-                                        <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=120&q=70&fit=crop" alt="Tesla Model S Plaid" />
-                                    </div>
-                                    <div>
-                                        <div class="vehicle-name">Tesla Model S Plaid</div>
-                                        <div class="vehicle-plate">ELEC-01</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="duration-days">1 day</div>
-                                <div class="duration-range">05 Oct 2023 – 06 Oct 2023</div>
-                            </td>
-                            <td><span class="amount-val">$850</span></td>
-                            <td>
-                                <div class="status-wrap">
-                                    <button class="badge badge-cancelled" onclick="toggleStatus(event, this)">
-                                        Cancelled
-                                        <svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View"
-                                            onclick="openBooking('BK-2023-004','Priya Sharma','priya@example.com','+91 99887 76655','Tesla Model S Plaid','ELEC-01','Electric','https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&q=80&fit=crop','05 Oct 2023','06 Oct 2023','1 day','$850','Cancelled','Customer requested cancellation')">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
+                                </td>
+                            </tr>
+                        }
+                    }
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
+
+
 
     <!-- Shared status dropdown portal -->
     <div id="statusDropdown" class="status-dropdown">
@@ -390,15 +379,25 @@
     </div>
 
     <script>
+        /* ══ ADD BOOKING TOGGLE ══ */
+        function toggleAddBookingForm() {
+            const card = document.getElementById('addBookingCard');
+            card.style.display = card.style.display === 'none' ? 'block' : 'none';
+        }
+
+
+
         /* ══ STATUS DROPDOWN ══ */
         let activeBadge = null;
+        let activeBookingId = null;
 
-        function toggleStatus(e, badge) {
+        function toggleStatus(e, badge, id) {
             e.stopPropagation();
             const dd = document.getElementById('statusDropdown');
             if (activeBadge === badge && dd.classList.contains('open')) { closeAll(); return; }
             closeAll();
             activeBadge = badge;
+            activeBookingId = id;
             const rect = badge.getBoundingClientRect();
             let left = rect.left;
             if (left + 172 > window.innerWidth - 8) left = window.innerWidth - 172 - 8;
@@ -408,14 +407,42 @@
             badge.closest('.status-wrap').classList.add('open');
         }
 
-        function applyStatus(label, badgeClass) {
-            if (!activeBadge) return;
-            const chevron = activeBadge.querySelector('.badge-chevron');
-            activeBadge.innerHTML = '';
-            activeBadge.appendChild(document.createTextNode(label + ' '));
-            activeBadge.appendChild(chevron);
-            activeBadge.className = 'badge ' + badgeClass + ' badge-flash';
-            setTimeout(() => activeBadge && activeBadge.classList.remove('badge-flash'), 500);
+        async function applyStatus(label, badgeClass) {
+            if (!activeBadge || !activeBookingId) return;
+            
+            // Capture locally to survive the async yield, because the click 
+            // event will bubble to document and trigger closeAll() which nulls them.
+            const targetBadge = activeBadge;
+            const targetId = activeBookingId;
+            
+            try {
+                const fd = new FormData();
+                fd.append("id", targetId);
+                fd.append("status", label);
+                
+                const res = await fetch('/Admin/UpdateBookingStatus', { method: 'POST', body: fd });
+                if (!res.ok) {
+                    const txt = await res.text();
+                    throw new Error("HTTP " + res.status + " - " + txt);
+                }
+                
+                const data = await res.json();
+                if (data && data.success === false) {
+                    throw new Error(data.message || "Unknown server error");
+                }
+                
+                const chevron = targetBadge.querySelector('.badge-chevron');
+                if (!chevron) throw new Error("Chevron SVG not found!");
+                
+                targetBadge.innerHTML = '';
+                targetBadge.appendChild(document.createTextNode(label + ' '));
+                targetBadge.appendChild(chevron);
+                targetBadge.className = 'badge ' + badgeClass + ' badge-flash';
+                setTimeout(() => targetBadge && targetBadge.classList.remove('badge-flash'), 500);
+            } catch (err) {
+                alert("Error updating status: " + err.message);
+                console.error(err);
+            }
             closeAll();
         }
 

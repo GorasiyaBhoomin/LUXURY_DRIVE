@@ -1,7 +1,9 @@
-﻿@{
+@{
     Layout = null;
     var action = ViewContext.RouteData.Values["action"]?.ToString();
     ViewData["Title"] = "AdminCustomers";
+    bool openAddForm = ViewBag.OpenAddForm == true;
+    bool openEditModal = ViewBag.OpenEditModal == true;
 }
 
 <!DOCTYPE html>
@@ -87,25 +89,25 @@
                     <div class="stat-icon s-blue">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                     </div>
-                    <div><div class="stat-num">8</div><div class="stat-lbl">Total Customers</div></div>
+                    <div><div class="stat-num">@(ViewBag.Customers?.Count ?? 0)</div><div class="stat-lbl">Total Customers</div></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon s-green">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                     </div>
-                    <div><div class="stat-num">6</div><div class="stat-lbl">Active</div></div>
+                    <div><div class="stat-num">@(ViewBag.Customers?.Count ?? 0)</div><div class="stat-lbl">Active</div></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon s-gold">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="8" width="22" height="10" rx="2" /><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" /></svg>
                     </div>
-                    <div><div class="stat-num">21</div><div class="stat-lbl">Total Bookings</div></div>
+                    <div><div class="stat-num">@(ViewBag.TotalRents ?? 0)</div><div class="stat-lbl">Total Bookings</div></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon s-purple">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                     </div>
-                    <div><div class="stat-num">₹3.2L</div><div class="stat-lbl">Total Revenue</div></div>
+                    <div><div class="stat-num">₹@(((decimal)(ViewBag.TotalRevenue ?? 0m)).ToString("N0"))</div><div class="stat-lbl">Total Revenue</div></div>
                 </div>
             </div>
 
@@ -132,135 +134,48 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @if (ViewBag.Customers != null)
+                    {
+                        var colors = new[] { "#3b82f6", "#a855f7", "#2db568", "#c9a84c", "#e05c2e", "#06b6d4" };
+                        var colorIndex = 0;
 
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#3b82f6">MC</div><div><div class="cust-name">Michael Chen</div><div class="cust-id">#CUST-001</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">michael.chen@gmail.com</span><span class="c-phone">+91 98765 43210</span></div></td>
-                            <td><span class="date-val">12 Jan 2024</span></td>
-                            <td><span class="trip-num">5</span> <span class="trip-lbl">trips</span></td>
-                            <td><span class="spent-val">₹42,500</span></td>
-                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Michael Chen','#CUST-001','michael.chen@gmail.com','+91 98765 43210','12 Jan 2024','5','₹42,500','Active','MC','#3b82f6','BMW M5, Audi R8, Porsche 911')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
+                        foreach (var cutomer in ViewBag.Customers)
+                        {
+                            var init = (cutomer.FullName != null && cutomer.FullName.Length >= 2) ? cutomer.FullName.Substring(0, 2).ToUpper() : "CU";
+                            var color = colors[colorIndex % colors.Length];
+                            colorIndex++;
+                            
+                            var emailKey = cutomer.Email?.ToLower()?.Trim() ?? "";
+                            var bCountDict = ViewBag.BookingsCount as System.Collections.Generic.Dictionary<string, int>;
+                            var sAmountDict = ViewBag.SpentAmount as System.Collections.Generic.Dictionary<string, decimal>;
+                            var vCountDict = ViewBag.VehiclesCount as System.Collections.Generic.Dictionary<string, int>;
+                            
+                            var bCount = bCountDict != null && bCountDict.ContainsKey(emailKey) ? bCountDict[emailKey] : 0;
+                            var sAmount = sAmountDict != null && sAmountDict.ContainsKey(emailKey) ? sAmountDict[emailKey] : 0m;
+                            var vCount = vCountDict != null && vCountDict.ContainsKey(emailKey) ? vCountDict[emailKey] : 0;
+                            
+                            var fullNameSafe = (cutomer.FullName ?? "").Replace("'", "\\'");
 
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#a855f7">SJ</div><div><div class="cust-name">Sarah Johnson</div><div class="cust-id">#CUST-002</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">sarah.j@outlook.com</span><span class="c-phone">+91 91234 56789</span></div></td>
-                            <td><span class="date-val">28 Jan 2024</span></td>
-                            <td><span class="trip-num">3</span> <span class="trip-lbl">trips</span></td>
-                            <td><span class="spent-val">₹27,000</span></td>
-                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Sarah Johnson','#CUST-002','sarah.j@outlook.com','+91 91234 56789','28 Jan 2024','3','₹27,000','Active','SJ','#a855f7','Porsche 911, Mercedes S-Class')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#2db568">JW</div><div><div class="cust-name">James Williams</div><div class="cust-id">#CUST-003</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">james.w@gmail.com</span><span class="c-phone">+91 87654 32109</span></div></td>
-                            <td><span class="date-val">03 Feb 2024</span></td>
-                            <td><span class="trip-num">4</span> <span class="trip-lbl">trips</span></td>
-                            <td><span class="spent-val">₹61,200</span></td>
-                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('James Williams','#CUST-003','james.w@gmail.com','+91 87654 32109','03 Feb 2024','4','₹61,200','Active','JW','#2db568','BMW X7, Audi R8, Tesla Model S')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#c9a84c">PS</div><div><div class="cust-name">Priya Sharma</div><div class="cust-id">#CUST-004</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">priya.sharma@yahoo.com</span><span class="c-phone">+91 99887 76655</span></div></td>
-                            <td><span class="date-val">17 Feb 2024</span></td>
-                            <td><span class="trip-num">2</span> <span class="trip-lbl">trips</span></td>
-                            <td><span class="spent-val">₹18,300</span></td>
-                            <td><span class="status-pill pill-inactive"><span class="sdot"></span>Inactive</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Priya Sharma','#CUST-004','priya.sharma@yahoo.com','+91 99887 76655','17 Feb 2024','2','₹18,300','Inactive','PS','#c9a84c','Tesla Model S, BMW M5')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#e05c2e">RK</div><div><div class="cust-name">Rahul Kapoor</div><div class="cust-id">#CUST-005</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">rahul.kapoor@gmail.com</span><span class="c-phone">+91 77665 54433</span></div></td>
-                            <td><span class="date-val">05 Mar 2024</span></td>
-                            <td><span class="trip-num">3</span> <span class="trip-lbl">trips</span></td>
-                            <td><span class="spent-val">₹35,750</span></td>
-                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Rahul Kapoor','#CUST-005','rahul.kapoor@gmail.com','+91 77665 54433','05 Mar 2024','3','₹35,750','Active','RK','#e05c2e','Porsche 911, Audi R8')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#06b6d4">AM</div><div><div class="cust-name">Ananya Mehta</div><div class="cust-id">#CUST-006</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">ananya.m@hotmail.com</span><span class="c-phone">+91 88990 01122</span></div></td>
-                            <td><span class="date-val">19 Mar 2024</span></td>
-                            <td><span class="trip-num">1</span> <span class="trip-lbl">trip</span></td>
-                            <td><span class="spent-val">₹12,000</span></td>
-                            <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Ananya Mehta','#CUST-006','ananya.m@hotmail.com','+91 88990 01122','19 Mar 2024','1','₹12,000','Active','AM','#06b6d4','Mercedes S-Class')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#64748b">VP</div><div><div class="cust-name">Vikram Patel</div><div class="cust-id">#CUST-007</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">vikram.patel@gmail.com</span><span class="c-phone">+91 70011 22334</span></div></td>
-                            <td><span class="date-val">02 Apr 2024</span></td>
-                            <td><span class="trip-num">2</span> <span class="trip-lbl">trips</span></td>
-                            <td><span class="spent-val">₹29,400</span></td>
-                            <td><span class="status-pill pill-inactive"><span class="sdot"></span>Inactive</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Vikram Patel','#CUST-007','vikram.patel@gmail.com','+91 70011 22334','02 Apr 2024','2','₹29,400','Inactive','VP','#64748b','BMW M5, Porsche 911')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><div class="cust-cell"><div class="cust-av" style="background:#f59e0b">NR</div><div><div class="cust-name">Neha Rao</div><div class="cust-id">#CUST-008</div></div></div></td>
-                            <td><div class="contact-cell"><span class="c-email">neha.rao@rediffmail.com</span><span class="c-phone">+91 93322 11445</span></div></td>
-                            <td><span class="date-val">14 Apr 2024</span></td>
-                            <td><span class="trip-num">1</span> <span class="trip-lbl">trip</span></td>
-                            <td><span class="spent-val">₹8,500</span></td>
-                            <td><span class="status-pill pill-new"><span class="sdot"></span>New</span></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="action-btn" title="View" onclick="openDetail('Neha Rao','#CUST-008','neha.rao@rediffmail.com','+91 93322 11445','14 Apr 2024','1','₹8,500','New','NR','#f59e0b','Audi R8')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
-                                    <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
-                                    <button class="action-btn danger" title="Remove" onclick="removeRow(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
-                                </div>
-                            </td>
-                        </tr>
-
+                            <tr>
+                                <td><div class="cust-cell"><div class="cust-av" style="background:@color">@init</div><div><div class="cust-name">@cutomer.FullName</div><div class="cust-id">#CUST-@cutomer.UserId</div></div></div></td>
+                                <td><div class="contact-cell"><span class="c-email">@cutomer.Email</span><span class="c-phone">@(string.IsNullOrEmpty(cutomer.PhoneNumber) ? "—" : cutomer.PhoneNumber)</span></div></td>
+                                <td><span class="date-val">—</span></td>
+                                <td><span class="trip-num">@bCount</span> <span class="trip-lbl">trips</span></td>
+                                <td><span class="spent-val">₹@sAmount.ToString("N0")</span></td>
+                                <td><span class="status-pill pill-active"><span class="sdot"></span>Active</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-btn" title="View" onclick="openDetail('@fullNameSafe','#CUST-@cutomer.UserId','@cutomer.Email','@(string.IsNullOrEmpty(cutomer.PhoneNumber) ? "" : cutomer.PhoneNumber)','—','@bCount','₹@sAmount.ToString("N0")','Active','@init','@color','@vCount')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button>
+                                        <button class="action-btn" title="Email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg></button>
+                                        <form method="post" asp-action="DeleteCustomer" style="display:inline;" onsubmit="return confirm('Delete this customer?');">
+                                            <input type="hidden" name="id" value="@cutomer.UserId" />
+                                            <button type="submit" class="action-btn danger" title="Remove"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
                     </tbody>
                 </table>
             </div>

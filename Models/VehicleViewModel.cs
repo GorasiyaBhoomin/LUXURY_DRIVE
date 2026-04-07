@@ -4,6 +4,8 @@ namespace LUXURY_DRIVE.Models
 {
     public class VehicleViewModel
     {
+        public int? VehicleId { get; set; }
+
         [Required(ErrorMessage = "Vehicle Name is required.")]
         public string Name { get; set; }
 
@@ -33,5 +35,12 @@ namespace LUXURY_DRIVE.Models
 
         [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; }
+
+        public string? Seats { get; set; }
+        public string? Transmission { get; set; }
+        public string? Fuel { get; set; }
+        public string? Year { get; set; }
+        public string? Color { get; set; }
+        public string? KeyFeatures { get; set; }
     }
 }

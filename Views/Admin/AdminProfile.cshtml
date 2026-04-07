@@ -78,23 +78,23 @@
                 <div class="banner-body">
                     <div class="banner-avatar" id="bannerAvatar">A</div>
                     <div class="banner-info">
-                        <div class="banner-name" id="bannerName">Admin</div>
-                        <div class="banner-email" id="bannerEmail">admin@luxedrive.com</div>
+                        <div class="banner-name" id="bannerName">@(Model.Profile?.FullName ?? "Admin")</div>
+                        <div class="banner-email" id="bannerEmail">@(Model.Profile?.Email ?? "admin@luxedrive.com")</div>
                         <span class="banner-role">Super Admin</span>
                     </div>
                     <div class="banner-stats">
                         <div class="bstat">
-                            <div class="bstat-num">21</div>
+                            <div class="bstat-num">@(ViewBag.TotalBookings ?? 0)</div>
                             <div class="bstat-lbl">Bookings</div>
                         </div>
                         <div class="bstat-div"></div>
                         <div class="bstat">
-                            <div class="bstat-num">8</div>
+                            <div class="bstat-num">@(ViewBag.TotalCustomers ?? 0)</div>
                             <div class="bstat-lbl">Customers</div>
                         </div>
                         <div class="bstat-div"></div>
                         <div class="bstat">
-                            <div class="bstat-num">4</div>
+                            <div class="bstat-num">@(ViewBag.TotalVehicles ?? 0)</div>
                             <div class="bstat-lbl">Vehicles</div>
                         </div>
                     </div>
@@ -120,12 +120,12 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label asp-for="Profile.FullName">Full Name</label>
-                                <input type="text" asp-for="Profile.FullName" class="form-input" placeholder="Your full name" oninput="liveUpdate()" />
+                                <input type="text" asp-for="Profile.FullName" id="pName" class="form-input" placeholder="Your full name" oninput="liveUpdate()" />
                                 <span asp-validation-for="Profile.FullName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label asp-for="Profile.Email">Email Address</label>
-                                <input type="email" asp-for="Profile.Email" class="form-input" placeholder="admin@example.com" oninput="liveUpdate()" />
+                                <input type="email" asp-for="Profile.Email" id="pEmail" class="form-input" placeholder="admin@example.com" oninput="liveUpdate()" />
                                 <span asp-validation-for="Profile.Email" class="text-danger"></span>
                             </div>
                             <div class="form-group">
@@ -144,7 +144,10 @@
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
                                 Save Changes
                             </button>
-                            <span class="save-msg" id="profileMsg"></span>
+                            @if (TempData["ProfileSuccess"] != null)
+                            {
+                                <span class="save-msg msg-ok">✓ @TempData["ProfileSuccess"]</span>
+                            }
                         </div>
                     </form>
                 </div>
@@ -205,7 +208,10 @@
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                                 Update Password
                             </button>
-                            <span class="save-msg" id="pwMsg"></span>
+                            @if (TempData["PasswordSuccess"] != null)
+                            {
+                                <span class="save-msg msg-ok">✓ @TempData["PasswordSuccess"]</span>
+                            }
                         </div>
                     </form>
                 </div>

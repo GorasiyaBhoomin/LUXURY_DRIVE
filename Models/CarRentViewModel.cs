@@ -5,6 +5,11 @@ namespace LUXURY_DRIVE.Models
 {
     public class CarRentViewModel
     {
+        public int? RentId { get; set; }
+        public int? VehicleId { get; set; }
+        public int? UserId { get; set; }
+        public string? Status { get; set; } // Optional: To support e.g. "Confirmed", "Pending", "Active", "Cancelled"
+
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; }
 

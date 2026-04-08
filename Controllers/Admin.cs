@@ -327,6 +327,91 @@ namespace LUXURY_DRIVE.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> SendCustomerEmail(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                TempData["EmailStatus"] = "Error: Customer not found.";
+                return RedirectToAction("AdminCustomers");
+            }
+
+            try
+            {
+                var rents = await _context.CarRents.Include(r => r.Vehicle)
+                    .Where(r => r.UserId == id || r.Email == user.Email).ToListAsync();
+                
+                int totalBookings = rents.Count;
+                decimal totalSpent = 0;
+                string vehicleImage = "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=70&fit=crop"; 
+                var latestRent = rents.OrderByDescending(r => r.PickupDate).FirstOrDefault();
+                if (latestRent?.Vehicle != null)
+                {
+                    vehicleImage = latestRent.Vehicle.ImageUrl;
+                }
+
+                foreach (var r in rents)
+                {
+                    if (r.Vehicle != null && decimal.TryParse(r.Vehicle.PriceDay.Replace(",", "").Trim(), out var price))
+                    {
+                        totalSpent += price * (r.NumberOfDays > 0 ? r.NumberOfDays : 1);
+                    }
+                }
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("gorasiyabhoomin@gmail.com", "Luxe Drive"),
+                    Subject = $"Customer Profile Update - Luxe Drive",
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(user.Email);
+
+                string body = $@"
+                    <html>
+                    <body style='font-family: Arial, sans-serif; background-color: #f7f9fa; color: #1a1a1a; text-align: center; padding: 40px;'>
+                        <div style='background-color: #ffffff; max-width: 600px; margin: 0 auto; border-radius: 12px; padding: 40px 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);'>
+                            <h1 style='color: #c9a84c; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; font-weight: 800; letter-spacing: 2px;'>LUXE DRIVE</h1>
+                            <p style='font-size: 18px; margin-top: 30px;'>Hello <strong>{user.FullName}</strong>,</p>
+                            <p style='font-size: 15px; color: #555; line-height: 1.6;'>Here is a summary of your premium experience with Luxe Drive.</p>
+                            
+                            <img src='{vehicleImage}' alt='Featured Vehicle' style='max-width: 100%; height: auto; border-radius: 8px; margin: 25px 0; border: 1px solid #eaeaea;' />
+                            
+                            <div style='background-color: #f8fafc; padding: 25px; border-radius: 12px; display: inline-block; text-align: left; width: 100%; box-sizing: border-box; border: 1px solid #e2e8f0;'>
+                                <ul style='list-style: none; padding: 0; margin: 0; color: #334155; font-size: 15px;'>
+                                    <li style='margin-bottom: 12px; display: flex; justify-content: space-between;'><strong>Name:</strong> <span style='font-weight: 600; color: #0f172a;'>{user.FullName}</span></li>
+                                    <li style='margin-bottom: 12px; display: flex; justify-content: space-between;'><strong>Email:</strong> <span style='font-weight: 600; color: #0f172a;'>{user.Email}</span></li>
+                                    <li style='margin-bottom: 12px; display: flex; justify-content: space-between;'><strong>Phone:</strong> <span style='font-weight: 600; color: #0f172a;'>{(string.IsNullOrEmpty(user.PhoneNumber) ? "—" : user.PhoneNumber)}</span></li>
+                                    <li style='margin-bottom: 12px; display: flex; justify-content: space-between;'><strong>Total Bookings:</strong> <span style='font-weight: 600; color: #0f172a;'>{totalBookings} trips</span></li>
+                                    <li style='display: flex; justify-content: space-between; border-top: 1px solid #cbd5e1; padding-top: 12px; margin-top: 12px;'><strong>Total Spent:</strong> <span style='font-weight: 700; color: #c9a84c;'>₹{totalSpent:N0}</span></li>
+                                </ul>
+                            </div>
+                            
+                            <p style='margin-top: 40px; font-size: 14px; color: #888;'>Thank you for choosing Luxe Drive. Safe travels!</p>
+                        </div>
+                    </body>
+                    </html>";
+
+                mailMessage.Body = body;
+
+                using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtpClient.EnableSsl = true;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new System.Net.NetworkCredential("gorasiyabhoomin@gmail.com", "vnfw gqut zypr izhs");
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+
+                TempData["EmailStatus"] = "Success: Customer details sent successfully to " + user.Email;
+            }
+            catch (Exception ex)
+            {
+                TempData["EmailStatus"] = "Error: Failed to send email. " + ex.Message;
+            }
+
+            return RedirectToAction("AdminCustomers");
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCustomer(CustomerViewModel model)
         {

@@ -222,7 +222,10 @@
                 <!-- ACCOUNT ACTIONS -->
                 <div class="tab-panel" id="panel-actions">
                     <div class="panel-title">Account Actions</div>
-                    <button class="btn-gold" onclick="logOut()">Log Out</button>
+                    <div style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin-top: 20px;">
+                        <a href="/Home/DownloadUserData" class="btn-outline-gold" style="text-align: center; display: block; width: 100%; box-sizing: border-box; text-decoration: none;">Download My Data</a>
+                        <button class="btn-gold" onclick="logOut()" style="width: 100%;">Log Out</button>
+                    </div>
                 </div>
 
             </div>

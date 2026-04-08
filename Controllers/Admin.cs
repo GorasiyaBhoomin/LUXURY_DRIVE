@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
 using System;
-
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 namespace LUXURY_DRIVE.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -281,6 +283,20 @@ namespace LUXURY_DRIVE.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("AdminVehicles");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateVehicleStatus(int id, string status)
+        {
+            var vehicle = await _context.Vehicles.FindAsync(id);
+            if (vehicle != null && !string.IsNullOrEmpty(status))
+            {
+                vehicle.Status = status;
+                _context.Vehicles.Update(vehicle);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, message = "Vehicle not found or status invalid." });
         }
 
         public async Task<IActionResult> AdminCustomers()
@@ -565,6 +581,255 @@ namespace LUXURY_DRIVE.Controllers
                 return RedirectToAction("AdminProfile");
             }
             return View("AdminProfile", new AdminProfilePageViewModel { Password = password });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportBookingsToPdf()
+        {
+            var bookings = await _context.CarRents.Include(c => c.Vehicle).Include(c => c.User).OrderByDescending(b => b.PickupDate).ToListAsync();
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4.Landscape());
+                    page.Margin(2, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial).FontColor("#333333"));
+
+                    page.Header().Row(row =>
+                    {
+                        row.RelativeItem().Column(column =>
+                        {
+                            column.Item().Text("ADMIN REPORT").FontSize(10).FontColor("#888888").LetterSpacing(0.05f);
+                            column.Item().Text("BOOKINGS MANAGEMENT").FontSize(24).SemiBold().FontColor("#c9a84c");
+                            column.Item().PaddingTop(4).Text($"Total Records: {bookings.Count}").FontSize(10).FontColor("#666666");
+                        });
+                        row.RelativeItem().AlignRight().Column(c => {
+                            c.Item().AlignRight().Text("LUXE DRIVE").FontSize(22).SemiBold().FontColor("#212529").LetterSpacing(0.05f);
+                            c.Item().AlignRight().Text($"Generated: {DateTime.Now:MMM d, yyyy h:mm tt}").FontSize(10).FontColor("#6c757d");
+                        });
+                    });
+
+                    page.Content().PaddingVertical(1, Unit.Centimetre).Column(column =>
+                    {
+                        column.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(1); // ID
+                                columns.RelativeColumn(3); // Customer
+                                columns.RelativeColumn(3); // Vehicle
+                                columns.RelativeColumn(2); // Duration
+                                columns.RelativeColumn(2); // Amount
+                                columns.RelativeColumn(2); // Status
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("ID").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Customer").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Vehicle").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Duration").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).AlignRight().Text("Amount").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).AlignCenter().Text("Status").FontSize(10).SemiBold().FontColor("#495057");
+                            });
+
+                            bool isAlt = false;
+                            foreach (var b in bookings)
+                            {
+                                var days = b.NumberOfDays > 0 ? b.NumberOfDays : 1;
+                                var amount = 0m;
+                                if (b.Vehicle != null && decimal.TryParse(b.Vehicle.PriceDay?.Replace(",", "").Trim(), out var price))
+                                    amount = price * days;
+
+                                string bg = isAlt ? "#f8f9fa" : "#ffffff";
+
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text($"#{b.RentId}");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text(b.User?.FullName ?? (b.FirstName + " " + b.LastName));
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text(b.Vehicle?.Name ?? "N/A");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text($"{b.PickupDate:dd MMM yy} ({days} days)");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).AlignRight().Text($"INR {amount:N0}").SemiBold();
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).AlignCenter().Text(b.Status?.ToUpper() ?? "PENDING").FontSize(9);
+                                isAlt = !isAlt;
+                            }
+                        });
+                    });
+
+                    page.Footer().Row(row => {
+                        row.RelativeItem().Text("Admin Report | Luxe Drive").FontSize(9).FontColor("#adb5bd");
+                        row.RelativeItem().AlignRight().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
+                    });
+                });
+            });
+
+            var stream = new System.IO.MemoryStream();
+            document.GeneratePdf(stream);
+            stream.Position = 0;
+            return File(stream, "application/pdf", $"Admin_Bookings_Report_{DateTime.Now:yyyyMMdd}.pdf");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportVehiclesToPdf()
+        {
+            var vehicles = await _context.Vehicles.ToListAsync();
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4.Landscape());
+                    page.Margin(2, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial).FontColor("#333333"));
+
+                    page.Header().Row(row =>
+                    {
+                        row.RelativeItem().Column(column =>
+                        {
+                            column.Item().Text("ADMIN REPORT").FontSize(10).FontColor("#888888").LetterSpacing(0.05f);
+                            column.Item().Text("VEHICLES INVENTORY").FontSize(24).SemiBold().FontColor("#c9a84c");
+                            column.Item().PaddingTop(4).Text($"Total Fleet Size: {vehicles.Count}").FontSize(10).FontColor("#666666");
+                        });
+                        row.RelativeItem().AlignRight().Column(c => {
+                            c.Item().AlignRight().Text("LUXE DRIVE").FontSize(22).SemiBold().FontColor("#212529").LetterSpacing(0.05f);
+                            c.Item().AlignRight().Text($"Generated: {DateTime.Now:MMM d, yyyy h:mm tt}").FontSize(10).FontColor("#6c757d");
+                        });
+                    });
+
+                    page.Content().PaddingVertical(1, Unit.Centimetre).Column(column =>
+                    {
+                        column.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(1); // ID
+                                columns.RelativeColumn(3); // Name
+                                columns.RelativeColumn(2); // Category
+                                columns.RelativeColumn(4); // Specs
+                                columns.RelativeColumn(2); // Price
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("ID").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Vehicle Name").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Category").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Key Specs").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).AlignRight().Text("Price / Day").FontSize(10).SemiBold().FontColor("#495057");
+                            });
+
+                            bool isAlt = false;
+                            foreach (var v in vehicles)
+                            {
+                                string bg = isAlt ? "#f8f9fa" : "#ffffff";
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text($"#{v.VehicleId}");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text($"{v.Name} {v.SubTitle}");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text(v.Category ?? "—");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text($"{v.Acc ?? "N/A"} | {v.TopSpeed ?? "N/A"} | {v.Horsepower ?? "N/A"}");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).AlignRight().Text(v.PriceDay ?? "—").SemiBold();
+                                isAlt = !isAlt;
+                            }
+                        });
+                    });
+
+                    page.Footer().Row(row => {
+                        row.RelativeItem().Text("Admin Report | Luxe Drive").FontSize(9).FontColor("#adb5bd");
+                        row.RelativeItem().AlignRight().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
+                    });
+                });
+            });
+
+            var stream = new System.IO.MemoryStream();
+            document.GeneratePdf(stream);
+            stream.Position = 0;
+            return File(stream, "application/pdf", $"Admin_Vehicles_Report_{DateTime.Now:yyyyMMdd}.pdf");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportCustomersToPdf()
+        {
+            var users = await _context.Users.Where(u => u.Role == "User").ToListAsync();
+            var rents = await _context.CarRents.Include(r => r.Vehicle).ToListAsync();
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4.Landscape());
+                    page.Margin(2, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial).FontColor("#333333"));
+
+                    page.Header().Row(row =>
+                    {
+                        row.RelativeItem().Column(column =>
+                        {
+                            column.Item().Text("ADMIN REPORT").FontSize(10).FontColor("#888888").LetterSpacing(0.05f);
+                            column.Item().Text("CUSTOMER PROFILES").FontSize(24).SemiBold().FontColor("#c9a84c");
+                            column.Item().PaddingTop(4).Text($"Registered Users: {users.Count}").FontSize(10).FontColor("#666666");
+                        });
+                        row.RelativeItem().AlignRight().Column(c => {
+                            c.Item().AlignRight().Text("LUXE DRIVE").FontSize(22).SemiBold().FontColor("#212529").LetterSpacing(0.05f);
+                            c.Item().AlignRight().Text($"Generated: {DateTime.Now:MMM d, yyyy h:mm tt}").FontSize(10).FontColor("#6c757d");
+                        });
+                    });
+
+                    page.Content().PaddingVertical(1, Unit.Centimetre).Column(column =>
+                    {
+                        column.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(3); // Name
+                                columns.RelativeColumn(3); // Email
+                                columns.RelativeColumn(2); // Phone
+                                columns.RelativeColumn(2); // Bookings
+                                columns.RelativeColumn(2); // Revenue
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Customer Name").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Email").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).Text("Phone").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).AlignRight().Text("Trips").FontSize(10).SemiBold().FontColor("#495057");
+                                header.Cell().Background("#e9ecef").BorderBottom(2).BorderColor("#dee2e6").Padding(6).AlignRight().Text("Lifetime Value").FontSize(10).SemiBold().FontColor("#495057");
+                            });
+
+                            bool isAlt = false;
+                            foreach (var u in users)
+                            {
+                                var userRents = rents.Where(r => (r.UserId == u.UserId) || (!string.IsNullOrEmpty(r.Email) && r.Email.ToLower() == u.Email?.ToLower()));
+                                int tripCount = userRents.Count();
+                                decimal lifetimeValue = 0m;
+                                foreach(var r in userRents) {
+                                    if(r.Vehicle != null && decimal.TryParse(r.Vehicle.PriceDay?.Replace(",", "").Trim(), out var p))
+                                        lifetimeValue += p * (r.NumberOfDays > 0 ? r.NumberOfDays : 1);
+                                }
+
+                                string bg = isAlt ? "#f8f9fa" : "#ffffff";
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text(u.FullName ?? "—").SemiBold();
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text(u.Email ?? "—");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).Text(u.PhoneNumber ?? "—");
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).AlignRight().Text(tripCount.ToString());
+                                table.Cell().Background(bg).BorderBottom(1).BorderColor("#dee2e6").Padding(6).AlignRight().Text($"INR {lifetimeValue:N0}").SemiBold();
+                                isAlt = !isAlt;
+                            }
+                        });
+                    });
+
+                    page.Footer().Row(row => {
+                        row.RelativeItem().Text("Admin Report | Luxe Drive").FontSize(9).FontColor("#adb5bd");
+                        row.RelativeItem().AlignRight().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
+                    });
+                });
+            });
+
+            var stream = new System.IO.MemoryStream();
+            document.GeneratePdf(stream);
+            stream.Position = 0;
+            return File(stream, "application/pdf", $"Admin_Customers_Report_{DateTime.Now:yyyyMMdd}.pdf");
         }
     }
 }

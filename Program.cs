@@ -18,6 +18,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
+// Configure QuestPDF License
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

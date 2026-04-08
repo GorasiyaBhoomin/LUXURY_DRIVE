@@ -70,11 +70,11 @@
                 <p>View all registered customers</p>
             </div>
             <div class="header-actions">
-                <button class="btn-filter">
+                <button class="btn-filter" onclick="document.querySelector('.search-input').focus()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                     Filter
                 </button>
-                <button class="btn-export">
+                <button class="btn-export" onclick="window.location.href='/Admin/ExportCustomersToPdf'">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                     Export
                 </button>
@@ -234,8 +234,7 @@
                     <div class="dm-stat"><div class="dm-stat-num" id="dmBookings"></div><div class="dm-stat-lbl">Bookings</div></div>
                     <div class="dm-sep"></div>
                     <div class="dm-stat"><div class="dm-stat-num gold" id="dmSpent"></div><div class="dm-stat-lbl">Total Spent</div></div>
-                    <div class="dm-sep"></div>
-                    <div class="dm-stat"><div class="dm-stat-num green">★ 4.8</div><div class="dm-stat-lbl">Avg Rating</div></div>
+
                 </div>
                 <div class="dm-actions">
                     <form method="post" asp-action="SendCustomerEmail" id="dmEmailForm" style="display:inline;" onsubmit="return confirm('Do you want to send a profile snapshot to this customer via email?');">

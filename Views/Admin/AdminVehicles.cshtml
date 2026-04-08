@@ -343,9 +343,13 @@
                 <p>Manage your fleet of vehicles</p>
             </div>
             <div class="header-actions">
-                <button class="btn-filter">
+                <button class="btn-filter" onclick="document.querySelector('.search-input').focus()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                     Filter
+                </button>
+                <button class="btn-export" style="background:var(--surface,#1a1a2e);color:#fff;border:1px solid var(--border,#2a2a3e);padding:8px 15px;border-radius:7px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;" onclick="window.location.href='/Admin/ExportVehiclesToPdf'">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                    Export
                 </button>
                 <button class="btn-add" onclick="toggleAddForm()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="addBtnIcon">
@@ -582,7 +586,11 @@
                                 <td><span class="price-val">@vehicle.PriceDay</span></td>
                                 <td>
                                     <div class="status-wrap">
-                                        <button class="badge badge-available" onclick="toggleStatus(event, this)">Available<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
+                                        @{
+                                            var st = vehicle.Status ?? "Available";
+                                            var badgeClass = "badge-" + st.ToLower();
+                                        }
+                                        <button class="badge @badgeClass" onclick="toggleStatus(event, this, @vehicle.VehicleId)">@st<svg class="badge-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
                                     </div>
                                 </td>
                                 <td>
@@ -805,13 +813,15 @@
            STATUS DROPDOWN
            ══════════════════════════════════════ */
         let activeBadge = null;
+        let activeVehicleId = null;
 
-        function toggleStatus(e, badge) {
+        function toggleStatus(e, badge, id) {
             e.stopPropagation();
             const dd = document.getElementById('statusDropdown');
             if (activeBadge === badge && dd.classList.contains('open')) { closeAll(); return; }
             closeAll();
             activeBadge = badge;
+            activeVehicleId = id;
             const rect = badge.getBoundingClientRect();
             let left = rect.left;
             if (left + 172 > window.innerWidth - 8) left = window.innerWidth - 172 - 8;
@@ -821,13 +831,31 @@
             badge.closest('.status-wrap').classList.add('open');
         }
 
-        function applyStatus(label, badgeClass) {
-            if (!activeBadge) return;
-            const chevron = activeBadge.querySelector('.badge-chevron').cloneNode(true);
-            activeBadge.textContent = label + ' ';
-            activeBadge.appendChild(chevron);
-            activeBadge.className = 'badge ' + badgeClass + ' badge-flash';
-            setTimeout(() => activeBadge && activeBadge.classList.remove('badge-flash'), 500);
+        async function applyStatus(label, badgeClass) {
+            if (!activeBadge || !activeVehicleId) return;
+            
+            const targetBadge = activeBadge;
+            const targetId = activeVehicleId;
+            
+            try {
+                const fd = new FormData();
+                fd.append("id", targetId);
+                fd.append("status", label);
+                
+                const res = await fetch('/Admin/UpdateVehicleStatus', { method: 'POST', body: fd });
+                if (!res.ok) throw new Error("HTTP Error");
+                const data = await res.json();
+                if (data && data.success === false) throw new Error(data.message);
+                
+                const chevron = targetBadge.querySelector('.badge-chevron').cloneNode(true);
+                targetBadge.textContent = label + ' ';
+                targetBadge.appendChild(chevron);
+                targetBadge.className = 'badge ' + badgeClass + ' badge-flash';
+                setTimeout(() => targetBadge && targetBadge.classList.remove('badge-flash'), 500);
+            } catch (err) {
+                alert("Error updating status: " + err.message);
+                console.error(err);
+            }
             closeAll();
         }
 

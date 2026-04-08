@@ -60,5 +60,8 @@ namespace LUXURY_DRIVE.Models.Entities
         public string? Color { get; set; }
 
         public string? KeyFeatures { get; set; }
+
+        [MaxLength(20)]
+        public string? Status { get; set; } = "Available";
     }
 }

@@ -1,8 +1,0 @@
-﻿C:\Program Files\dotnet\sdk\10.0.103\Microsoft.Common.CurrentVersion.targets(5381,5): error MSB3027: Could not copy "D:\6th_SEM_BTECH\.NET\LUXURY_DRIVE\obj\Debug\net10.0\apphost.exe" to "bin\Debug\net10.0\LUXURY_DRIVE.exe". Exceeded retry count of 10. Failed. The file is locked by: "LUXURY_DRIVE (17716)" [D:\6th_SEM_BTECH\.NET\LUXURY_DRIVE\LUXURY_DRIVE.csproj]
-C:\Program Files\dotnet\sdk\10.0.103\Microsoft.Common.CurrentVersion.targets(5381,5): error MSB3021: Unable to copy file "D:\6th_SEM_BTECH\.NET\LUXURY_DRIVE\obj\Debug\net10.0\apphost.exe" to "bin\Debug\net10.0\LUXURY_DRIVE.exe". The process cannot access the file 'D:\6th_SEM_BTECH\.NET\LUXURY_DRIVE\bin\Debug\net10.0\LUXURY_DRIVE.exe' because it is being used by another process. [D:\6th_SEM_BTECH\.NET\LUXURY_DRIVE\LUXURY_DRIVE.csproj]
-
-Build FAILED.
-    10 Warning(s)
-    2 Error(s)
-
-Time Elapsed 00:00:12.20

@@ -412,7 +412,7 @@
                             <div class="af-g4">
                                 <div class="af-group">
                                     <label asp-for="Name">Vehicle Name <span class="af-req">*</span></label>
-                                    <input type="text" asp-for="Name" id="afName" class="af-input" placeholder="e.g. BMW M5" />
+                                    <input type="text" asp-for="Name" id="afName" class="af-input" placeholder="e.g. BMW M5" onblur="afAutoFetchSpecs()" />
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="af-group">
@@ -798,6 +798,52 @@
             } else {
                 imgEl.classList.remove('af-visible');
                 placeholder.style.display = 'flex';
+            }
+        }
+
+        // Auto-fetch specs from AutoData API based on name
+        async function afAutoFetchSpecs() {
+            const query = document.getElementById('afName').value.trim();
+            if (!query) return;
+
+            try {
+                // Show temporary fetching state mapping
+                document.getElementById('afName').style.opacity = '0.5';
+
+                const response = await fetch('/api/AutoData/fetch?query=' + encodeURIComponent(query));
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Autofill fields only if they are currently completely empty
+                    const setIfEmpty = (id, val) => {
+                        const el = document.getElementById(id);
+                        if (el && !el.value && val) el.value = val;
+                    };
+
+                    setIfEmpty('afSub', data.subTitle);
+                    setIfEmpty('afCat', data.category);
+                    setIfEmpty('afPrice', data.priceDay);
+                    setIfEmpty('afAcc', data.acc);
+                    setIfEmpty('afSpeed', data.topSpeed);
+                    setIfEmpty('afHp', data.horsepower);
+                    setIfEmpty('afMileage', data.mileage);
+                    setIfEmpty('afSeats', data.seats);
+                    setIfEmpty('afTrans', data.transmission);
+                    setIfEmpty('afFuel', data.fuel);
+                    setIfEmpty('afYear', data.year);
+                    setIfEmpty('afColor', data.color);
+                    setIfEmpty('afDesc', data.description);
+
+                    // Force image preview if image url is provided (rare for generic car name lookups, but if we add it)
+                    if (data.imageUrl && !document.getElementById('afImg').value) {
+                         document.getElementById('afImg').value = data.imageUrl;
+                         afUpdatePreview();
+                    }
+                }
+            } catch (err) {
+                console.error("Auto-fetch API failed:", err);
+            } finally {
+                document.getElementById('afName').style.opacity = '1';
             }
         }
 

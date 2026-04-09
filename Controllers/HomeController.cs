@@ -41,6 +41,11 @@ namespace LUXURY_DRIVE.Controllers
             var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == id);
             if (vehicle != null)
             {
+                if (vehicle.Status == "Rented" || vehicle.Status == "Maintenance")
+                {
+                    TempData["ErrorMessage"] = $"Sorry, this vehicle is currently {vehicle.Status}.";
+                    return RedirectToAction("Index");
+                }
                 ViewBag.Vehicle = vehicle;
             }
 
@@ -242,14 +247,27 @@ namespace LUXURY_DRIVE.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitContact(ContactViewModel model)
+        public async Task<IActionResult> SubmitContact(ContactViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.ShowContactError = true;
                 return View("Index", model);
             }
-            // TODO: Send email / save to db
+
+            var contact = new LUXURY_DRIVE.Models.Entities.Contact
+            {
+                Name = model.Name ?? "",
+                Email = model.Email ?? "",
+                Message = model.Message ?? "",
+                SubmittedAt = DateTime.Now
+            };
+
+            _context.Contacts.Add(contact);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Your message has been sent successfully!";
+
             return RedirectToAction("Index");
         }
 

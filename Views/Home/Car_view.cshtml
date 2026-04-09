@@ -118,6 +118,7 @@
                     {icon:'📅', key:'Year', val:'@Html.Raw(car.Year?.Replace("'", "\\'") ?? "2024")'},
                     {icon:'🎨', key:'Color', val:'@Html.Raw(car.Color?.Replace("'", "\\'") ?? "Standard")'}
                 ],
+                status: '@Html.Raw(car.Status ?? "Available")',
                 features: '@Html.Raw(car.KeyFeatures?.Replace("'", "\\'") ?? "")' 
                           ? '@Html.Raw(car.KeyFeatures?.Replace("'", "\\'") ?? "")'.split(',').map(s => s.trim()).filter(Boolean) 
                           : ['Premium Audio', 'Leather Seats', 'Rear Camera', 'Cruise Control'],
@@ -162,7 +163,17 @@
             document.getElementById('carPrice').textContent = currentCar.price;
             document.getElementById('typeRibbon').textContent = currentCar.type;
             document.getElementById('carDesc').textContent = currentCar.desc;
-            document.getElementById('rentBtn').href = '/Home/Car_rent?id=' + currentId;
+            
+            const rentBtn = document.getElementById('rentBtn');
+            if (currentCar.status && currentCar.status !== 'Available') {
+                rentBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg> ${currentCar.status}`;
+                rentBtn.style.background = '#333';
+                rentBtn.style.color = '#aaa';
+                rentBtn.style.cursor = 'not-allowed';
+                rentBtn.onclick = function(e) { e.preventDefault(); };
+            } else {
+                rentBtn.href = '/Home/Car_rent?id=' + currentId;
+            }
 
             // MAIN IMAGE
             document.getElementById('mainImg').src = currentCar.img;

@@ -128,7 +128,14 @@
                             <div class="car-price">₹@car.PriceDay <span>/day</span></div>
                             <div class="car-actions">
                                 <a href="/Home/Car_view?id=@car.VehicleId" class="btn-sm btn-sm-outline">View</a>
-                                <a href="/Home/Car_rent?id=@car.VehicleId" class="btn-sm btn-sm-fill">Rent</a>
+                                @if (car.Status == "Available" || string.IsNullOrEmpty(car.Status))
+                                {
+                                    <a href="/Home/Car_rent?id=@car.VehicleId" class="btn-sm btn-sm-fill">Rent</a>
+                                }
+                                else
+                                {
+                                    <span class="btn-sm btn-sm-outline" style="background:#333; border-color:#333; color:#aaa; cursor:not-allowed;">@car.Status</span>
+                                }
                             </div>
                         </div>
                     </div>
@@ -241,7 +248,7 @@
                     <div class="contact-item-icon">📍</div>
                     <div class="contact-item-text">
                         <label>Address</label>
-                        <p>123 Main Street, New York, NY 10001</p>
+                        <p>Near Rajkot Airport, Gujarat</p>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -380,6 +387,25 @@
             <text>
             document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            });
+            </text>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+            document.addEventListener("DOMContentLoaded", function () {
+                alert("@TempData["SuccessMessage"]");
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            });
+            </text>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+            document.addEventListener("DOMContentLoaded", function () {
+                alert("@TempData["ErrorMessage"]");
             });
             </text>
         }
